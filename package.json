@@ -1,0 +1,58 @@
+{
+  "name": "rc-CropViewer",
+  "version": "0.0.1",
+  "description": "CropViewer ui component for react",
+  "keywords": [
+    "react",
+    "react-component",
+    "react-CropViewer",
+    "CropViewer"
+  ],
+  "homepage": "https://github.com/react-component/CropViewer",
+  "author": "surgesoft@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-component/CropViewer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/react-component/CropViewer/issues"
+  },
+  "files": [
+    "lib",
+    "assets/*.css"
+  ],
+  "licenses": "MIT",
+  "main": "./lib/index",
+  "config": {
+    "port": 8002
+  },
+  "scripts": {
+    "build": "rc-tools run build",
+    "gh-pages": "rc-tools run gh-pages",
+    "start": "rc-tools run server",
+    "pub": "rc-tools run pub",
+    "lint": "rc-tools run lint",
+    "karma": "rc-tools run karma",
+    "saucelabs": "rc-tools run saucelabs",
+    "test": "rc-tools run test",
+    "chrome-test": "rc-tools run chrome-test",
+    "coverage": "rc-tools run coverage"
+  },
+  "devDependencies": {
+    "@types/classnames": "^0.0.31",
+    "@types/react": "^0.14.44",
+    "antd": "^2.3.0",
+    "expect.js": "0.3.x",
+    "pre-commit": "1.x",
+    "rc-tools": "5.x",
+    "react": "15.x",
+    "react-addons-test-utils": "15.x",
+    "react-dom": "15.x"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "dependencies": {
+    "classnames": "^2.2.5"
+  }
+}
