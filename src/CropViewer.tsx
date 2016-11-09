@@ -62,16 +62,17 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
   }
   onChange = (fileblob: Blob) => {
     if (this.props.onChange) {
-      return this.props.onChange(fileblob);
+      this.props.onChange(fileblob);
     }
-
-    if (fileblob) {
-      this.loadSelectedImage(fileblob);
-    } else {
-      this.setState({
-        previewImage: null,
-        selectedImage: null,
-      });
+    if (!this.props.value) {
+      if (fileblob) {
+        this.loadSelectedImage(fileblob);
+      } else {
+        this.setState({
+          previewImage: null,
+          selectedImage: null,
+        });
+      }
     }
   }
   render() {

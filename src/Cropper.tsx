@@ -212,6 +212,7 @@ export default class Cropper extends React.Component<any, any> {
   }
 
   handleCancel = () => {
+    this.props.onChange(null);
     this.setState({
       visible: false,
     });
@@ -252,7 +253,7 @@ export default class Cropper extends React.Component<any, any> {
     if (image) {
       return (<div>
       <Spin />
-      <Modal visible={this.state.visible} title="编辑图片" width={800} footer={footer}>
+      <Modal visible={this.state.visible} title="编辑图片" width={800} footer={footer} onCancel={this.handleCancel}>
         <div className={`${prefixCls}-cropper-wrapper`}>
           <div className={`${prefixCls}-cropper`}>
             <div className={`${prefixCls}-thumbnail`} style={viewPortStyle}>
