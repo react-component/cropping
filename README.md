@@ -1,7 +1,7 @@
-# rc-CropViewer
+# rc-cropping
 ---
 
-React CropViewer Component
+React cropping Component
 
 
 [![NPM version][npm-image]][npm-url]
@@ -10,22 +10,22 @@ React CropViewer Component
 [![gemnasium deps][gemnasium-image]][gemnasium-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
-[![Sauce Test Status](https://saucelabs.com/buildstatus/rc-CropViewer)](https://saucelabs.com/u/rc-CropViewer)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/rc-cropping)](https://saucelabs.com/u/rc-cropping)
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/rc-CropViewer.svg)](https://saucelabs.com/u/rc-CropViewer)
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/rc-cropping.svg)](https://saucelabs.com/u/rc-cropping)
 
-[npm-image]: http://img.shields.io/npm/v/rc-CropViewer.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/rc-CropViewer
-[travis-image]: https://img.shields.io/travis/react-component/CropViewer.svg?style=flat-square
-[travis-url]: https://travis-ci.org/react-component/CropViewer
-[coveralls-image]: https://img.shields.io/coveralls/react-component/CropViewer.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/react-component/CropViewer?branch=master
-[gemnasium-image]: http://img.shields.io/gemnasium/react-component/CropViewer.svg?style=flat-square
-[gemnasium-url]: https://gemnasium.com/react-component/CropViewer
+[npm-image]: http://img.shields.io/npm/v/rc-cropping.svg?style=flat-square
+[npm-url]: http://npmjs.org/package/rc-cropping
+[travis-image]: https://img.shields.io/travis/react-component/cropping.svg?style=flat-square
+[travis-url]: https://travis-ci.org/react-component/cropping
+[coveralls-image]: https://img.shields.io/coveralls/react-component/cropping.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/react-component/cropping?branch=master
+[gemnasium-image]: http://img.shields.io/gemnasium/react-component/cropping.svg?style=flat-square
+[gemnasium-url]: https://gemnasium.com/react-component/cropping
 [node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
-[download-image]: https://img.shields.io/npm/dm/rc-CropViewer.svg?style=flat-square
-[download-url]: https://npmjs.org/package/rc-CropViewer
+[download-image]: https://img.shields.io/npm/dm/rc-cropping.svg?style=flat-square
+[download-url]: https://npmjs.org/package/rc-cropping
 
 
 ## Browser Support
@@ -51,7 +51,7 @@ npm start
 http://localhost:8001/examples/
 
 
-online example: http://react-component.github.io/CropViewer/
+online example: http://react-component.github.io/cropping/
 
 
 ## Feature
@@ -62,15 +62,15 @@ online example: http://react-component.github.io/CropViewer/
 ## install
 
 
-[![rc-CropViewer](https://nodei.co/npm/rc-CropViewer.png)](https://npmjs.org/package/rc-CropViewer)
+[![rc-cropping](https://nodei.co/npm/rc-cropping.png)](https://npmjs.org/package/rc-cropping)
 
 
 ## Usage
 
 ```js
-var CropViewer = require('rc-CropViewer');
+var cropping = require('rc-cropping');
 var React = require('react');
-React.render(<CropViewer />, container);
+React.render(<cropping />, container);
 ```
 
 ## API
@@ -114,4 +114,4 @@ open coverage/ dir
 
 ## License
 
-rc-CropViewer is released under the MIT license.
+rc-cropping is released under the MIT license.
