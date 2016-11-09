@@ -68,9 +68,9 @@ online example: http://react-component.github.io/cropping/
 ## Usage
 
 ```js
-var cropping = require('rc-cropping');
+var Cropping = require('rc-cropping');
 var React = require('react');
-React.render(<cropping />, container);
+React.render(<Cropping />, container);
 ```
 
 ## API
