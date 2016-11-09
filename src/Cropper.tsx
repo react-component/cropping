@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Scaler from './Scaler';
+import Preview from './Preview';
 import { Button, Modal, Spin } from 'antd';
 export type imageAttr = 'width' | 'height';
+import { debounce, downScaleImage, applyTransform } from './utils';
 
 export interface ImageState {
   width: number;
@@ -122,12 +124,20 @@ export default class Cropper extends React.Component<any, any> {
       height: imageState.height,
       widthLimit: [this.state.viewport[0] - imageState.width, 0],
       heightLimit: [this.state.viewport[1] - imageState.height, 0],
-    });
+    }, this.updateThumbnail);
 
     left = (this.state.viewport[0] - imageState.width) / 2;
     top = (this.state.viewport[1] - imageState.height) / 2; 
     this.applyPositions({ left, top });
   }
+
+  updateThumbnail = debounce(() => {
+    const { image, width, height, viewport, scale } = this.state;
+    const { size } = this.props;
+    // const scaledImage = downScaleImage(image, 0.2);
+    this.refs.Canvas2x.getContext('2d').drawImage(image, left, top, width, height);
+    this.refs.Canvas1x.getContext('2d').drawImage(image, left, top, width, height);
+  }, 100)
   // 初始化 Cropper，图片的尺寸会默认 fit 320 * 320
   normalizeImage = (image) => {
     const { width, height } = image;
@@ -158,12 +168,14 @@ export default class Cropper extends React.Component<any, any> {
   }
 
   applyPositions = ({left, top}) => {
-    this.refs.viewport.style.left = `${left}px`;
-    this.refs.viewport.style.top = `${top}px`;
-    this.refs.dragger.style.left = `${left}px`;
-    this.refs.dragger.style.top = `${top}px`;
+    // this.refs.viewport.style.left = `${left}px`;
+    // this.refs.viewport.style.top = `${top}px`;
+    applyTransform(this.refs.viewport, `translate3d(${left}px,${top}px,0)`);
+    applyTransform(this.refs.dragger, `translate3d(${left}px,${top}px,0)`);
+    // this.refs.dragger.style.left = `${left}px`;
+    // this.refs.dragger.style.top = `${top}px`;
   }
- 
+
   onMouseDown = () => {
     this.setState({
       dragging: true,
@@ -187,7 +199,7 @@ export default class Cropper extends React.Component<any, any> {
       startX = ev.clientX;
       startY = ev.clientY;
       this.applyPositions({ left, top });
-
+      this.updateThumbnail();
       // 拖动后，不再提示可拖动
       if (this.refs.dragNotice) {
         this.refs.dragNotice.style.display = 'none';
@@ -206,23 +218,23 @@ export default class Cropper extends React.Component<any, any> {
   }
   handleOk = () => {
     const { image, width, height, scale, scaleRange } = this.state;
+    const scaledImage = downScaleImage(image, scale);
     const canvas = document.createElement('canvas');
     canvas.style.width = `${this.state.viewport[0]}px`;
     canvas.style.height = `${this.state.viewport[1]}px`;
     canvas.setAttribute('width', this.state.viewport[0]);
     canvas.setAttribute('height', this.state.viewport[1]);
     const context = canvas.getContext('2d');
-    context.drawImage(image, left, top, width, height);
+    context.drawImage(scaledImage , left, top, width, height);
     canvas.toBlob( blob => {
       this.props.onChange(blob);
       this.setState({
         visible: false,
       });
-    });  
-
+    });
   }
   render() {
-    const { prefixCls } = this.props;
+    const { prefixCls, size } = this.props;
     const { image, width, height, left, top, scale, scaleRange, viewport } = this.state;
     const style = { left, top };
     const draggerEvents = {
@@ -240,29 +252,40 @@ export default class Cropper extends React.Component<any, any> {
     if (image) {
       return (<div>
       <Spin />
-      <Modal visible={this.state.visible} title="编辑图片" width={700} footer={footer}>
-      <div className={`${prefixCls}-cropper-wrapper`}>
-      <div className={`${prefixCls}-cropper`}>
-        <div className={`${prefixCls}-thumbnail`} style={viewPortStyle}>
-          <div className="thumbnail-window" style={viewPortStyle}>
-            <img src={image.src} ref="viewport" width={width} height={height} style={style}/>
+      <Modal visible={this.state.visible} title="编辑图片" width={800} footer={footer}>
+        <div className={`${prefixCls}-cropper-wrapper`}>
+          <div className={`${prefixCls}-cropper`}>
+            <div className={`${prefixCls}-thumbnail`} style={viewPortStyle}>
+              <div className="thumbnail-window" style={viewPortStyle}>
+                <img src={image.src} ref="viewport" width={width} height={height} style={style}/>
+              </div>
+              <img
+                {...draggerEvents}
+                ref="dragger"
+                src={image.src}
+                width={width}
+                height={height}
+                style={style} 
+                className={`${prefixCls}-background`} 
+                draggable={false}
+              />
+              {scale > scaleRange[0] ? <div className="candrag-notice-wrapper" ref="dragNotice"> 
+                <span className="candrag-notice">拖动调整位置</span> 
+              </div> : null}
+            </div>
           </div>
-          <img
-            {...draggerEvents}
-            ref="dragger"
-            src={image.src}
-            width={width}
-            height={height}
-            style={style} 
-            className={`${prefixCls}-background`} 
-            draggable={false}
-          />
-           {scale > scaleRange[0] ? <div className="candrag-notice-wrapper" ref="dragNotice"> 
-            <span className="candrag-notice">拖动调整位置</span> 
-          </div> : null}
+          <div className={`${prefixCls}-thumbnail-preview`}>
+            <h4>预览</h4>
+            <div className="size-2x">
+              <canvas ref="Canvas2x" width={viewport[0]} height={viewport[1]} style={{width: size[0] * 2, height: size[1] * 2}}></canvas>
+              <p>2x: {`${size[0] * 2}px * ${size[1] * 2}px`}</p>
+            </div>
+            <div className="size-1x">
+              <canvas ref="Canvas1x" width={viewport[0]} height={viewport[1]} style={{width: size[0], height: size[1]}}></canvas>
+              <p>1x: {`${size[0]}px * ${size[1]}px`}</p>
+            </div>
           </div>
         </div>
-      </div>
       </Modal>
       </div>);
     }

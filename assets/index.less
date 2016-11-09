@@ -35,10 +35,35 @@
       }
     }
   }
+
   &-cropper-wrapper {
     overflow: hidden;
     background-color: #f2f2f2;
+    padding-right: 200px;
+    position: relative;
   }
+
+  &-thumbnail-preview {
+    position: absolute;
+    height: 100%;
+    width: 200px;
+    right: 0;
+    top: 0;
+    padding: 0 14px;
+    background-color: white;
+    .size-1x, .size-2x {
+      text-align: center;
+      margin: 20px 0;
+    }
+    canvas {
+      image-rendering: optimizeQuality;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimize-contrast;
+      -ms-interpolation-mode: nearest-neighbor;
+    }
+  }
+
   &-crop-viewer-uploader {
     width: 100%;
     height: 100%;
@@ -81,6 +106,7 @@
     position: relative;
     img {
       position: absolute;
+      top: 0;
     }
     .thumbnail-window {
       width: 320px;
@@ -100,7 +126,7 @@
   &-scaller {
     display: inline-block;
     text-align: center;
-    margin-right: 65px;
+    margin-right: 200px;
     button {
       appearance: none;
       background: none;

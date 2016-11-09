@@ -53,16 +53,30 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
     }
   }
   reset = () => {
-    this.props.onChange(null);
+    this.onChange(null);
   }
   selectImage = (reader) => {
     this.setState({
       previewImage: reader,
     });
   }
+  onChange = (fileblob: Blob) => {
+    if (this.props.onChange) {
+      return this.props.onChange(fileblob);
+    }
+
+    if (fileblob) {
+      this.loadSelectedImage(fileblob);
+    } else {
+      this.setState({
+        previewImage: null,
+        selectedImage: null,
+      });
+    }
+  }
   render() {
     const { previewImage, selectedImage } = this.state;
-    const { prefixCls, value, onChange, size } = this.props;
+    const { prefixCls, value, size } = this.props;
 
     if (selectedImage) {
       return <div className={`${prefixCls}-preview-wrapper`}>
@@ -75,7 +89,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
       </div>;
     }
     if (previewImage) {
-      return <Cropper size={size} prefixCls={prefixCls} image={previewImage} onChange={onChange} />;
+      return <Cropper size={size} prefixCls={prefixCls} image={previewImage} onChange={this.onChange} />;
     }
     return <Uploader prefixCls={prefixCls} onSelectImage={this.selectImage}/>;
   }
