@@ -36,7 +36,7 @@ React cropping Component
 
 ## Screenshots
 
-<img src="" width="288"/>
+<img src="https://zos.alipayobjects.com/rmsportal/vrydErgwuwLzNpQ.png" width="288"/>
 
 
 ## Development
