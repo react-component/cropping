@@ -16,12 +16,14 @@ export interface CropProps {
   value: Blob;
   onChange: (blob: Blob) => void,
   size?: Array<number>,
+  circle?: boolean,
 }
 
 export default class CropViewer extends React.Component<CropProps, CropViewerState> {
   static defaultProps = {
     prefixCls: 'rc',
     size: [32, 32],
+    circle: false,
   };
   constructor(props) {
     super(props);
@@ -77,7 +79,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
   }
   render() {
     const { previewImage, selectedImage } = this.state;
-    const { prefixCls, value, size } = this.props;
+    const { prefixCls, value, size, circle } = this.props;
 
     if (selectedImage) {
       return <div className={`${prefixCls}-preview-wrapper`}>
@@ -90,7 +92,13 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
       </div>;
     }
     if (previewImage) {
-      return <Cropper size={size} prefixCls={prefixCls} image={previewImage} onChange={this.onChange} />;
+      return <Cropper 
+        circle={circle}
+        size={size}
+        prefixCls={prefixCls}
+        image={previewImage}
+        onChange={this.onChange} 
+      />;
     }
     return <Uploader prefixCls={prefixCls} onSelectImage={this.selectImage}/>;
   }

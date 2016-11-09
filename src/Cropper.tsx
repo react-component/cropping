@@ -235,7 +235,7 @@ export default class Cropper extends React.Component<any, any> {
     });
   }
   render() {
-    const { prefixCls, size } = this.props;
+    const { prefixCls, size, circle} = this.props;
     const { image, width, height, left, top, scale, scaleRange, viewport } = this.state;
     const style = { left, top };
     const draggerEvents = {
@@ -250,6 +250,7 @@ export default class Cropper extends React.Component<any, any> {
       </Button>
     ];
     const viewPortStyle ={width: viewport[0], height: viewport[1]};
+    const previewClassName = circle ? 'radius' : null;
     if (image) {
       return (<div>
       <Spin />
@@ -278,11 +279,11 @@ export default class Cropper extends React.Component<any, any> {
           <div className={`${prefixCls}-thumbnail-preview`}>
             <h4>预览</h4>
             <div className="size-2x">
-              <canvas ref="Canvas2x" width={viewport[0]} height={viewport[1]} style={{width: size[0] * 2, height: size[1] * 2}}></canvas>
+              <canvas className={previewClassName} ref="Canvas2x" width={viewport[0]} height={viewport[1]} style={{width: size[0] * 2, height: size[1] * 2}}></canvas>
               <p>2x: {`${size[0] * 2}px * ${size[1] * 2}px`}</p>
             </div>
             <div className="size-1x">
-              <canvas ref="Canvas1x" width={viewport[0]} height={viewport[1]} style={{width: size[0], height: size[1]}}></canvas>
+              <canvas className={previewClassName} ref="Canvas1x" width={viewport[0]} height={viewport[1]} style={{width: size[0], height: size[1]}}></canvas>
               <p>1x: {`${size[0]}px * ${size[1]}px`}</p>
             </div>
           </div>

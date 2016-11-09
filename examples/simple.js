@@ -5,4 +5,4 @@ import CropViewer from 'rc-CropViewer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-ReactDOM.render(<CropViewer />, document.getElementById('__react-content'));
+ReactDOM.render(<CropViewer circle={true} />, document.getElementById('__react-content'));
