@@ -44,6 +44,7 @@
     "antd": "^2.3.0",
     "expect.js": "0.3.x",
     "pre-commit": "1.x",
+    "rc-dialog": "^6.5.0",
     "rc-tools": "5.x",
     "react": "15.x",
     "react-addons-test-utils": "15.x",
@@ -53,6 +54,7 @@
     "lint"
   ],
   "dependencies": {
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "rc-slider": "^5.2.1"
   }
 }

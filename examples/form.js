@@ -4,7 +4,8 @@ import 'rc-cropping/assets/index.less';
 import CropViewer from 'rc-cropping';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, Modal, Spin} from 'antd';
+
 const FormItem = Form.Item;
 
 const NormalLoginForm = Form.create()(React.createClass({
@@ -37,6 +38,8 @@ const NormalLoginForm = Form.create()(React.createClass({
             <CropViewer 
               size={[64, 64]} 
               thumbnailSizes={[[64, 64], [32, 32]]}
+              getSpinContent={() => <Spin /> }
+              renderModal={() => <Modal />}
             />
           )}
         </FormItem>

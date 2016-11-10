@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Icon } from 'antd';
+import Icon from './Icon';
 
 function isImage(file: File) {
   return file.type && /^image\//g.test(file.type);
@@ -38,9 +38,9 @@ export default class Uploader extends React.Component<UploaderProps, any> {
   }
   render() {
     const { prefixCls } = this.props;
-  return (<Button type="ghost" onClick={this.onClick}>
+  return (<button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} type="ghost" onClick={this.onClick}>
       <input type="file" ref="file" style={{display: 'none'}} onChange={this.selectFile}/>
       <Icon type="upload" /> Click to Upload
-    </Button>);
+    </button>);
   }
 }

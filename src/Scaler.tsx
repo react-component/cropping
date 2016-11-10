@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Slider, Icon } from 'antd';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import Icon from './Icon';
 
 const maxValue = 1.7777;
 
@@ -15,6 +17,7 @@ export default function CropViewer(props) {
         <Icon type="picture" className="smaller" />
       </button>
       <Slider
+        className={`${prefixCls}-slider`}
         value={value}
         min={min}
         max={maxValue}

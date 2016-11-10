@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { Upload, Icon, message } from 'antd';
+import Icon from './Icon';
 import 'antd/dist/antd.less';
 import Uploader from './Uploader';
 import Cropper from './Cropper';
-
-const Dragger = Upload.Dragger;
 
 export interface CropViewerState {
   previewImage?: FileReader;
@@ -14,9 +12,11 @@ export interface CropViewerState {
 export interface CropProps {
   prefixCls: string;
   value: Blob;
-  onChange: (blob: Blob) => void,
-  size?: Array<number>,
-  circle?: boolean,
+  onChange: (blob: Blob) => void;
+  size?: Array<number>;
+  circle?: boolean;
+  renderModal: (args?:any) => React.ComponentElement<any, any>;
+  getSpinContent: () => React.ComponentElement<any, any>;
 }
 
 export default class CropViewer extends React.Component<CropProps, CropViewerState> {
@@ -79,7 +79,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
   }
   render() {
     const { previewImage, selectedImage } = this.state;
-    const { prefixCls, value, size, circle } = this.props;
+    const { prefixCls, value, size, circle, getSpinContent, renderModal} = this.props;
 
     if (selectedImage) {
       return <div className={`${prefixCls}-preview-wrapper`}>
@@ -98,6 +98,8 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
         prefixCls={prefixCls}
         image={previewImage}
         onChange={this.onChange} 
+        renderModal={renderModal}
+        spin={getSpinContent()}
       />;
     }
     return <Uploader prefixCls={prefixCls} onSelectImage={this.selectImage}/>;

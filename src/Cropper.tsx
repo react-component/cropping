@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Scaler from './Scaler';
 import Preview from './Preview';
-import { Button, Modal, Spin } from 'antd';
 export type imageAttr = 'width' | 'height';
 import { debounce, downScaleImage, applyTransform } from './utils';
 
@@ -33,11 +32,23 @@ function limit(value:number, limitArray: Array<number>): number{
   return value;
 }
 
-export default class Cropper extends React.Component<any, any> {
+export interface CropperProps {
+  image: FileReader;
+  size: Array<number>;
+  onChange: (args: any) => void;
+  prefixCls?: string;
+  circle?: boolean;
+  spin?: React.ComponentElement<any, any>;
+  renderModal?: (args?:any) => React.ComponentElement<any, any>;
+}
+
+export default class Cropper extends React.Component<CropperProps, any> {
   refs: {
     viewport: HTMLElement,
     dragger: HTMLElement,
     dragNotice: HTMLElement,
+    Canvas2x: HTMLCanvasElement,
+    Canvas1x: HTMLCanvasElement,
   };
 
   constructor(props) {
@@ -235,7 +246,7 @@ export default class Cropper extends React.Component<any, any> {
     });
   }
   render() {
-    const { prefixCls, size, circle} = this.props;
+    const { prefixCls, size, circle, spin, renderModal } = this.props;
     const { image, width, height, left, top, scale, scaleRange, viewport } = this.state;
     const style = { left, top };
     const draggerEvents = {
@@ -244,51 +255,58 @@ export default class Cropper extends React.Component<any, any> {
 
     const footer = [
       <Scaler key="scaler" prefixCls={prefixCls} onChange={this.scaleImage} value={scale} min={scaleRange[0]} max={scaleRange[1]} />,
-      <Button key="back" type="ghost" size="large" onClick={this.handleCancel}>Cancel</Button>,
-      <Button key="submit" type="primary" size="large" onClick={this.handleOk}>
+      <button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} key="back" type="ghost" onClick={this.handleCancel}>Cancel</button>,
+      <button className={`${prefixCls}-btn ${prefixCls}-btn-primary`} key="submit" type="primary" onClick={this.handleOk}>
         Submit
-      </Button>
+      </button>
     ];
     const viewPortStyle ={width: viewport[0], height: viewport[1]};
     const previewClassName = circle ? 'radius' : null;
+    const ModalElement = renderModal();
+
+    const cropperElement = image ? (<div className={`${prefixCls}-cropper-wrapper`}>
+      <div className={`${prefixCls}-cropper`}>
+        <div className={`${prefixCls}-thumbnail`} style={viewPortStyle}>
+          <div className="thumbnail-window" style={viewPortStyle}>
+            <img src={image.src} ref="viewport" width={width} height={height} style={style}/>
+          </div>
+          <img
+            {...draggerEvents}
+            ref="dragger"
+            src={image.src}
+            width={width}
+            height={height}
+            style={style} 
+            className={`${prefixCls}-background`} 
+            draggable={false}
+          />
+          {scale > scaleRange[0] ? <div className="candrag-notice-wrapper" ref="dragNotice"> 
+            <span className="candrag-notice">拖动调整位置</span> 
+          </div> : null}
+        </div>
+      </div>
+      <div className={`${prefixCls}-thumbnail-preview`}>
+        <h4>预览</h4>
+        <div className="size-2x">
+          <canvas className={previewClassName} ref="Canvas2x" width={viewport[0]} height={viewport[1]} style={{width: size[0] * 2, height: size[1] * 2}}></canvas>
+          <p>2x: {`${size[0] * 2}px * ${size[1] * 2}px`}</p>
+        </div>
+        <div className="size-1x">
+          <canvas className={previewClassName} ref="Canvas1x" width={viewport[0]} height={viewport[1]} style={{width: size[0], height: size[1]}}></canvas>
+          <p>1x: {`${size[0]}px * ${size[1]}px`}</p>
+        </div>
+      </div>
+  </div>) : null;
     if (image) {
       return (<div>
-      <Spin />
-      <Modal visible={this.state.visible} title="编辑图片" width={800} footer={footer} onCancel={this.handleCancel}>
-        <div className={`${prefixCls}-cropper-wrapper`}>
-          <div className={`${prefixCls}-cropper`}>
-            <div className={`${prefixCls}-thumbnail`} style={viewPortStyle}>
-              <div className="thumbnail-window" style={viewPortStyle}>
-                <img src={image.src} ref="viewport" width={width} height={height} style={style}/>
-              </div>
-              <img
-                {...draggerEvents}
-                ref="dragger"
-                src={image.src}
-                width={width}
-                height={height}
-                style={style} 
-                className={`${prefixCls}-background`} 
-                draggable={false}
-              />
-              {scale > scaleRange[0] ? <div className="candrag-notice-wrapper" ref="dragNotice"> 
-                <span className="candrag-notice">拖动调整位置</span> 
-              </div> : null}
-            </div>
-          </div>
-          <div className={`${prefixCls}-thumbnail-preview`}>
-            <h4>预览</h4>
-            <div className="size-2x">
-              <canvas className={previewClassName} ref="Canvas2x" width={viewport[0]} height={viewport[1]} style={{width: size[0] * 2, height: size[1] * 2}}></canvas>
-              <p>2x: {`${size[0] * 2}px * ${size[1] * 2}px`}</p>
-            </div>
-            <div className="size-1x">
-              <canvas className={previewClassName} ref="Canvas1x" width={viewport[0]} height={viewport[1]} style={{width: size[0], height: size[1]}}></canvas>
-              <p>1x: {`${size[0]}px * ${size[1]}px`}</p>
-            </div>
-          </div>
-        </div>
-      </Modal>
+        {spin}
+        {React.cloneElement(ModalElement, {
+          visible: this.state.visible,
+          title: "编辑图片",
+          width: 800,
+          footer,
+          onCancel: this.handleCancel,
+        }, cropperElement)}
       </div>);
     }
 

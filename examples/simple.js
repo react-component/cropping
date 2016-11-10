@@ -2,7 +2,13 @@
 
 import 'rc-cropping/assets/index.less';
 import CropViewer from 'rc-cropping';
+import Dialog from 'rc-dialog';
+import 'rc-dialog/assets/index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-ReactDOM.render(<CropViewer circle={true} />, document.getElementById('__react-content'));
+ReactDOM.render(<CropViewer 
+  getSpinContent={() => <span>loading...</span> }
+  renderModal={() => <Dialog />}
+  circle={true} 
+/>, document.getElementById('__react-content'));
