@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>form.js - example - rc-cropping@0.0.2</title>
+  <title>form.js - example - rc-cropping@0.0.3</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,25 +257,26 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="common.css" />
+  <link rel="stylesheet" href="common.css" /><link rel="stylesheet" href="form.css" />
 </head>
 
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-cropping@0.0.2</h1>
+      <h1>rc-cropping@0.0.3</h1>
 
       <p>CropViewer ui component for react</p>
     </div>
     <div class="example" id="__react-content"></div>
 
     <div class="highlight"><pre><code language="undefined">// use jsx to render html, do not modify simple.html
-
+import 'antd/dist/antd.less';
 import 'rc-cropping/assets/index.css';
 import CropViewer from 'rc-cropping';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Button, Modal, Spin } from 'antd';
+
 const FormItem = Form.Item;
 
 const NormalLoginForm = Form.create()(React.createClass({
@@ -308,6 +309,8 @@ const NormalLoginForm = Form.create()(React.createClass({
             &lt;CropViewer 
               size={[64, 64]} 
               thumbnailSizes={[[64, 64], [32, 32]]}
+              getSpinContent={() =&gt; &lt;Spin /&gt; }
+              renderModal={() =&gt; &lt;Modal /&gt;}
             /&gt;
           )}
         &lt;/FormItem&gt;
