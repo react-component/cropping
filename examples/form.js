@@ -40,6 +40,7 @@ const NormalLoginForm = Form.create()(React.createClass({
               thumbnailSizes={[[64, 64], [32, 32]]}
               getSpinContent={() => <Spin /> }
               renderModal={() => <Modal />}
+              fileType="image/jpeg"
             />
           )}
         </FormItem>

@@ -3,6 +3,10 @@ import Scaler from './Scaler';
 export type imageAttr = 'width' | 'height';
 import { debounce, downScaleImage, applyTransform } from './utils';
 
+function isImage(file: File) {
+  return file.type && /^image\//g.test(file.type);
+}
+
 export interface ImageState {
   width: number;
   height: number;
@@ -32,7 +36,7 @@ function limit(value: number, limitArray: Array<number>): number {
 }
 
 export interface CropperProps {
-  image: FileReader;
+  image: File;
   size: Array<number>;
   onChange: (args: any) => void;
   prefixCls?: string;
@@ -87,7 +91,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
   }
 
   componentDidMount() {
-    this.loadImage(this.props.image);
+    this.readFile(this.props.image);
     document.addEventListener('mouseup', this.dragEnd);
     document.addEventListener('mousemove', this.dragOver);
   }
@@ -96,8 +100,15 @@ export default class Cropper extends React.Component<CropperProps, any> {
     document.removeEventListener('mouseup', this.dragEnd);
     document.removeEventListener('mousemove', this.dragOver);
   }
-
+  readFile = (file: File) => {
+    const reader = new FileReader();
+    if (file && isImage(file)) {
+      reader.readAsDataURL(file);
+    }
+    reader.onload = () => this.loadImage(reader);
+  }
   loadImage = (reader: FileReader) => {
+    // const reader = new FileReader();
     const image = new Image();
     // Although you can use images without CORS approval in your canvas, doing so taints the canvas. 
     // Once a canvas has been tainted, you can no longer pull data back out of the canvas. 
@@ -242,7 +253,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
       this.setState({
         visible: false,
       });
-    });
+    }, this.props.image.type);
   }
   render() {
     const { prefixCls, size, circle, spin, renderModal } = this.props;

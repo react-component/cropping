@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Icon from './Icon';
 
-function isImage(file: File) {
-  return file.type && /^image\//g.test(file.type);
-}
+export interface FileMeta {
+  name: string;
+  type: string;
+};
 
 export interface UploaderProps {
-  onSelectImage: (reader: FileReader) => void;
+  onSelectImage: (file: File) => void;
   prefixCls?: string;
 };
 
@@ -25,16 +26,19 @@ export default class Uploader extends React.Component<UploaderProps, any> {
   }
 
   selectFile = (ev) => {
-    const reader = new FileReader();
+    // const reader = new FileReader();
     const file = this.refs.file.files[0];
+    this.props.onSelectImage(file);
+    // if (file && isImage(file)) {
+    //   reader.readAsDataURL(file);
+    // }
 
-    if (file && isImage(file)) {
-      reader.readAsDataURL(file);
-    }
-
-    reader.onload = () => {
-      this.props.onSelectImage(reader);
-    };
+    // reader.onload = () => {
+    //   this.props.onSelectImage(reader, {
+    //     name: file.name, 
+    //     type: file.type,
+    //   });
+    // };
   }
   render() {
     const { prefixCls } = this.props;

@@ -4,7 +4,7 @@ import Uploader from './Uploader';
 import Cropper from './Cropper';
 
 export interface CropViewerState {
-  previewImage?: FileReader;
+  previewImage?: File;
   selectedImage?: string;
 }
 
@@ -56,14 +56,15 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
   reset = () => {
     this.onChange(null);
   }
-  selectImage = (reader) => {
+  selectImage = (file) => {
     this.setState({
-      previewImage: reader,
+      previewImage: file,
     });
   }
   onChange = (fileblob: Blob) => {
     if (this.props.onChange) {
-      this.props.onChange(fileblob);
+      const file = new File([fileblob], this.state.previewImage.name);
+      this.props.onChange(file);
     }
     if (!this.props.value) {
       if (fileblob) {

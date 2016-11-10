@@ -1,0 +1,35 @@
+@iconfont-css-prefix: cropper-icon;
+
+@font-face {
+  font-family: 'rc-crop';  /* project id："178487" */
+  src: url('//at.alicdn.com/t/font_b46n7aif4ci35wmi.eot');
+  src: url('//at.alicdn.com/t/font_b46n7aif4ci35wmi.eot') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_b46n7aif4ci35wmi.woff') format('woff'),
+  url('//at.alicdn.com/t/font_b46n7aif4ci35wmi.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_b46n7aif4ci35wmi.svg#rc-crop') format('svg');
+}
+
+.iconfont-mixin() {
+  display: inline-block;
+  font-style: normal;
+  vertical-align: baseline;
+  text-align: center;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+
+  &:before {
+    display: block;
+    font-size: 14px;
+    font-family: "rc-crop" !important;
+  }
+}
+
+.@{iconfont-css-prefix} {
+  .iconfont-mixin();
+}
+
+
+.@{iconfont-css-prefix}-picture:before                  { content: '\e602';}
+.@{iconfont-css-prefix}-upload:before                  { content: '\e617';}
+.@{iconfont-css-prefix}-delete:before                  { content: '\e656';}
