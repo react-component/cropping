@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Icon from './Icon';
-import 'antd/dist/antd.less';
 import Uploader from './Uploader';
 import Cropper from './Cropper';
 
 export interface CropViewerState {
   previewImage?: FileReader;
-  selectedImage?: string,
+  selectedImage?: string;
 }
 
 export interface CropProps {
@@ -15,7 +14,7 @@ export interface CropProps {
   onChange: (blob: Blob) => void;
   size?: Array<number>;
   circle?: boolean;
-  renderModal: (args?:any) => React.ComponentElement<any, any>;
+  renderModal: (args?: any) => React.ComponentElement<any, any>;
   getSpinContent: () => React.ComponentElement<any, any>;
 }
 
@@ -52,7 +51,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
       this.setState({
         selectedImage: reader.result,
       });
-    }
+    };
   }
   reset = () => {
     this.onChange(null);
@@ -79,7 +78,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
   }
   render() {
     const { previewImage, selectedImage } = this.state;
-    const { prefixCls, value, size, circle, getSpinContent, renderModal} = this.props;
+    const { prefixCls, size, circle, getSpinContent, renderModal} = this.props;
 
     if (selectedImage) {
       return <div className={`${prefixCls}-preview-wrapper`}>
@@ -92,12 +91,12 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
       </div>;
     }
     if (previewImage) {
-      return <Cropper 
+      return <Cropper
         circle={circle}
         size={size}
         prefixCls={prefixCls}
         image={previewImage}
-        onChange={this.onChange} 
+        onChange={this.onChange}
         renderModal={renderModal}
         spin={getSpinContent()}
       />;

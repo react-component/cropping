@@ -1,4 +1,4 @@
-export function debounce(func, wait, immediate:boolean = false) {
+export function debounce(func, wait, immediate: boolean = false) {
   let timeout;
   return function debounceFunc() {
     const context = this;
@@ -28,28 +28,31 @@ function getTransformProperty(node) {
         'WebkitTransform',
         'msTransform',
         'MozTransform',
-        'OTransform'
+        'OTransform',
     ];
-    let p;
-    while (p = properties.shift()) {
-        if (typeof node.style[p] != 'undefined') {
+    let p = properties.shift();
+    while (p) {
+        if (typeof node.style[p] !== 'undefined') {
             return p;
         }
+        p = properties.shift();
     }
-    return false;
+    return '';
 };
 
 export function applyTransform(element, transformString: string) {
   const transformProperty = getTransformProperty(element);
-  element.style[transformProperty] = transformString;
+  if (transformProperty) {
+    element.style[transformProperty] = transformString;
+  }
 }
 
 // pixel-perfect downsampling
 export function downScaleImage(img, scale) {
-    var imgCV = document.createElement('canvas');
+    const imgCV = document.createElement('canvas');
     imgCV.width = img.width;
     imgCV.height = img.height;
-    var imgCtx = imgCV.getContext('2d');
+    const imgCtx = imgCV.getContext('2d');
     imgCtx.drawImage(img, 0, 0);
     if (scale >= 1) {
       return imgCV;
@@ -57,6 +60,7 @@ export function downScaleImage(img, scale) {
     return downScaleCanvas(imgCV, scale);
 }
 
+/* tslint:disable */
 function downScaleCanvas(cv, scale) {
     if (!(scale < 1) || !(scale > 0)) throw ('scale must be a positive number <1 ');
     var sqScale = scale * scale; // square scale = area of source pixel within target
@@ -181,3 +185,5 @@ function downScaleCanvas(cv, scale) {
     resCtx.putImageData(imgRes, 0, 0);
     return resCV;
 }
+
+/* tslint:enable */

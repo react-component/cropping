@@ -1,10 +1,10 @@
 // use jsx to render html, do not modify simple.html
-
+import 'antd/dist/antd.less';
 import 'rc-cropping/assets/index.less';
 import CropViewer from 'rc-cropping';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Form, Icon, Input, Button, Checkbox, Modal, Spin} from 'antd';
+import { Form, Button, Modal, Spin } from 'antd';
 
 const FormItem = Form.Item;
 

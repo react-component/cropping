@@ -38,13 +38,17 @@
     "chrome-test": "rc-tools run chrome-test",
     "coverage": "rc-tools run coverage"
   },
+  "dependencies": {
+    "rc-slider": "^5.2.1"
+  },
   "devDependencies": {
     "@types/classnames": "^0.0.31",
     "@types/react": "^0.14.44",
-    "antd": "^2.3.0",
+    "antd": "^2.3.2",
     "expect.js": "0.3.x",
     "pre-commit": "1.x",
     "rc-dialog": "^6.5.0",
+    "rc-form": "^1.0.1",
     "rc-tools": "5.x",
     "react": "15.x",
     "react-addons-test-utils": "15.x",
@@ -52,9 +56,5 @@
   },
   "pre-commit": [
     "lint"
-  ],
-  "dependencies": {
-    "classnames": "^2.2.5",
-    "rc-slider": "^5.2.1"
-  }
+  ]
 }

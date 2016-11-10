@@ -14,7 +14,7 @@ export default class Uploader extends React.Component<UploaderProps, any> {
 
   refs: {
     file: HTMLInputElement;
-  }
+  };
 
   onClick = () => {
     const el = this.refs.file;
@@ -23,7 +23,7 @@ export default class Uploader extends React.Component<UploaderProps, any> {
     }
     el.click();
   }
-  
+
   selectFile = (ev) => {
     const reader = new FileReader();
     const file = this.refs.file.files[0];
@@ -34,11 +34,11 @@ export default class Uploader extends React.Component<UploaderProps, any> {
 
     reader.onload = () => {
       this.props.onSelectImage(reader);
-    }
+    };
   }
   render() {
     const { prefixCls } = this.props;
-  return (<button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} type="ghost" onClick={this.onClick}>
+    return (<button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} type="ghost" onClick={this.onClick}>
       <input type="file" ref="file" style={{display: 'none'}} onChange={this.selectFile}/>
       <Icon type="upload" /> Click to Upload
     </button>);

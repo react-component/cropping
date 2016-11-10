@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Scaler from './Scaler';
-import Preview from './Preview';
 export type imageAttr = 'width' | 'height';
 import { debounce, downScaleImage, applyTransform } from './utils';
 
@@ -20,7 +19,7 @@ let left = 0;
 let top = 0;
 let dragging = false;
 
-function limit(value:number, limitArray: Array<number>): number{
+function limit(value: number, limitArray: Array<number>): number {
   const min = Math.min(limitArray[0], limitArray[1]);
   const max = Math.max(limitArray[0], limitArray[1]);
   if (value < min) {
@@ -39,7 +38,7 @@ export interface CropperProps {
   prefixCls?: string;
   circle?: boolean;
   spin?: React.ComponentElement<any, any>;
-  renderModal?: (args?:any) => React.ComponentElement<any, any>;
+  renderModal?: (args?: any) => React.ComponentElement<any, any>;
 }
 
 export default class Cropper extends React.Component<CropperProps, any> {
@@ -50,6 +49,13 @@ export default class Cropper extends React.Component<CropperProps, any> {
     Canvas2x: HTMLCanvasElement,
     Canvas1x: HTMLCanvasElement,
   };
+
+  updateThumbnail = debounce(() => {
+    const { image, width, height } = this.state;
+    // const scaledImage = downScaleImage(image, 0.2);
+    this.refs.Canvas2x.getContext('2d').drawImage(image, left, top, width, height);
+    this.refs.Canvas1x.getContext('2d').drawImage(image, left, top, width, height);
+  }, 100);
 
   constructor(props) {
     super(props);
@@ -64,11 +70,10 @@ export default class Cropper extends React.Component<CropperProps, any> {
     } else {
       imageState = {
         height: 320,
-        width: 320 / size[1] * size[0]
+        width: 320 / size[1] * size[0],
       } as ImageState;
     }
 
-    console.log('>> imageState', imageState);
     this.state = {
       image: null,
       viewport: [imageState.width, imageState.height],
@@ -125,9 +130,15 @@ export default class Cropper extends React.Component<CropperProps, any> {
       heightLimit: [this.state.viewport[1] - imageState.height, 0],
     });
 
-    left = limit((this.state.viewport[0] - imageState.width) / 2 + Δleft, [this.state.viewport[0] - imageState.width, 0]);
-    top = limit((this.state.viewport[1] - imageState.height) / 2 + Δtop, [this.state.viewport[1] - imageState.height, 0]); 
-    this.applyPositions({ left, top });
+    left = limit(
+      (this.state.viewport[0] - imageState.width) / 2 + Δleft,
+      [this.state.viewport[0] - imageState.width, 0]
+    );
+    top = limit(
+      (this.state.viewport[1] - imageState.height) / 2 + Δtop,
+      [this.state.viewport[1] - imageState.height, 0]
+    );
+    this.applyPositions();
   }
   applyImageState = (imageState) => {
     this.setState({
@@ -138,38 +149,30 @@ export default class Cropper extends React.Component<CropperProps, any> {
     }, this.updateThumbnail);
 
     left = (this.state.viewport[0] - imageState.width) / 2;
-    top = (this.state.viewport[1] - imageState.height) / 2; 
-    this.applyPositions({ left, top });
+    top = (this.state.viewport[1] - imageState.height) / 2;
+    this.applyPositions();
   }
 
-  updateThumbnail = debounce(() => {
-    const { image, width, height, viewport, scale } = this.state;
-    const { size } = this.props;
-    // const scaledImage = downScaleImage(image, 0.2);
-    this.refs.Canvas2x.getContext('2d').drawImage(image, left, top, width, height);
-    this.refs.Canvas1x.getContext('2d').drawImage(image, left, top, width, height);
-  }, 100)
   // 初始化 Cropper，图片的尺寸会默认 fit 320 * 320
   normalizeImage = (image) => {
     const { width, height } = image;
     const { viewport } = this.state;
 
-    const widthProportional = width / viewport[0]; 
-    const heightProportional = height / viewport[1];   
-    console.log('>> widthProportional', widthProportional, 'heightProportional', heightProportional);
+    const widthProportional = width / viewport[0];
+    const heightProportional = height / viewport[1];
     const ΔProportional = widthProportional / heightProportional;
 
     const IdpVar: imageAttr = ΔProportional > 1 ? 'height' : 'width'; // 自变量
     const depVar: imageAttr = ΔProportional > 1 ? 'width' : 'height'; // 因变量
     const scale = Number((viewport[Number(ΔProportional > 1)] / image[IdpVar]).toFixed(4));
-    console.log('基准缩放属性：', IdpVar, ':', image[IdpVar], 'px, 缩放至:', viewport[Number(ΔProportional > 1)], 'px, 缩放比例：', scale);
-    
+    // console.log('基准缩放属性：', IdpVar,':', image[IdpVar], 'px', 
+    //             '缩放至:', viewport[Number(ΔProportional > 1)], 'px', 
+    //             '缩放比例：', scale); // tslint:ignore
     const imageState = {
       [IdpVar]: viewport[Number(ΔProportional > 1)],
       [depVar]: viewport[Number(ΔProportional > 1)] / viewport[Number(ΔProportional > 1)] * image[depVar] * scale,
     } as ImageState;
 
-    console.log('>> imageState', imageState);
     this.setState({
       image,
       scale,
@@ -178,13 +181,9 @@ export default class Cropper extends React.Component<CropperProps, any> {
     }, () => this.applyImageState(imageState));
   }
 
-  applyPositions = ({left, top}) => {
-    // this.refs.viewport.style.left = `${left}px`;
-    // this.refs.viewport.style.top = `${top}px`;
+  applyPositions = () => {
     applyTransform(this.refs.viewport, `translate3d(${left}px,${top}px,0)`);
     applyTransform(this.refs.dragger, `translate3d(${left}px,${top}px,0)`);
-    // this.refs.dragger.style.left = `${left}px`;
-    // this.refs.dragger.style.top = `${top}px`;
   }
 
   onMouseDown = () => {
@@ -198,7 +197,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
     startX = ev.clientX;
     startY = ev.clientY;
   }
-  
+
   dragOver = (ev) => {
     if (dragging) {
       Δleft += (ev.clientX - startX);
@@ -206,10 +205,10 @@ export default class Cropper extends React.Component<CropperProps, any> {
 
       left = limit(left + (ev.clientX - startX), this.state.widthLimit);
       top = limit(top + (ev.clientY - startY), this.state.heightLimit);
-      
+
       startX = ev.clientX;
       startY = ev.clientY;
-      this.applyPositions({ left, top });
+      this.applyPositions();
       this.updateThumbnail();
       // 拖动后，不再提示可拖动
       if (this.refs.dragNotice) {
@@ -217,7 +216,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
       }
     }
   }
-  
+
   dragEnd = () => {
     dragging = false;
   }
@@ -229,7 +228,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
     });
   }
   handleOk = () => {
-    const { image, width, height, scale, scaleRange } = this.state;
+    const { image, width, height, scale } = this.state;
     const scaledImage = downScaleImage(image, scale);
     const canvas = document.createElement('canvas');
     canvas.style.width = `${this.state.viewport[0]}px`;
@@ -247,20 +246,39 @@ export default class Cropper extends React.Component<CropperProps, any> {
   }
   render() {
     const { prefixCls, size, circle, spin, renderModal } = this.props;
-    const { image, width, height, left, top, scale, scaleRange, viewport } = this.state;
-    const style = { left, top };
+    const { image, width, height, scale, scaleRange, viewport } = this.state;
+    const style = { left: 0, top: 0 };
     const draggerEvents = {
       onMouseDown: this.dragStart,
     };
 
     const footer = [
-      <Scaler key="scaler" prefixCls={prefixCls} onChange={this.scaleImage} value={scale} min={scaleRange[0]} max={scaleRange[1]} />,
-      <button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} key="back" type="ghost" onClick={this.handleCancel}>Cancel</button>,
-      <button className={`${prefixCls}-btn ${prefixCls}-btn-primary`} key="submit" type="primary" onClick={this.handleOk}>
+      <Scaler
+        key="scaler"
+        prefixCls={prefixCls}
+        onChange={this.scaleImage}
+        value={scale}
+        min={scaleRange[0]}
+        max={scaleRange[1]}
+      />,
+      <button
+        className={`${prefixCls}-btn ${prefixCls}-btn-ghost`}
+        key="back"
+        type="ghost"
+        onClick={this.handleCancel}
+      >
+        Cancel
+      </button>,
+      <button
+        className={`${prefixCls}-btn ${prefixCls}-btn-primary`}
+        key="submit"
+        type="primary"
+        onClick={this.handleOk}
+      >
         Submit
-      </button>
+      </button>,
     ];
-    const viewPortStyle ={width: viewport[0], height: viewport[1]};
+    const viewPortStyle = { width: viewport[0], height: viewport[1] };
     const previewClassName = circle ? 'radius' : null;
     const ModalElement = renderModal();
 
@@ -276,23 +294,35 @@ export default class Cropper extends React.Component<CropperProps, any> {
             src={image.src}
             width={width}
             height={height}
-            style={style} 
-            className={`${prefixCls}-background`} 
+            style={style}
+            className={`${prefixCls}-background`}
             draggable={false}
           />
-          {scale > scaleRange[0] ? <div className="candrag-notice-wrapper" ref="dragNotice"> 
-            <span className="candrag-notice">拖动调整位置</span> 
+          {scale > scaleRange[0] ? <div className="candrag-notice-wrapper" ref="dragNotice">
+            <span className="candrag-notice">拖动调整位置</span>
           </div> : null}
         </div>
       </div>
       <div className={`${prefixCls}-thumbnail-preview`}>
         <h4>预览</h4>
         <div className="size-2x">
-          <canvas className={previewClassName} ref="Canvas2x" width={viewport[0]} height={viewport[1]} style={{width: size[0] * 2, height: size[1] * 2}}></canvas>
+          <canvas
+            className={previewClassName}
+            ref="Canvas2x"
+            width={viewport[0]}
+            height={viewport[1]}
+            style={{width: size[0] * 2, height: size[1] * 2}}
+          ></canvas>
           <p>2x: {`${size[0] * 2}px * ${size[1] * 2}px`}</p>
         </div>
         <div className="size-1x">
-          <canvas className={previewClassName} ref="Canvas1x" width={viewport[0]} height={viewport[1]} style={{width: size[0], height: size[1]}}></canvas>
+          <canvas
+            className={previewClassName}
+            ref="Canvas1x"
+            width={viewport[0]}
+            height={viewport[1]}
+            style={{width: size[0], height: size[1]}}
+          ></canvas>
           <p>1x: {`${size[0]}px * ${size[1]}px`}</p>
         </div>
       </div>
@@ -302,7 +332,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
         {spin}
         {React.cloneElement(ModalElement, {
           visible: this.state.visible,
-          title: "编辑图片",
+          title: '编辑图片',
           width: 800,
           footer,
           onCancel: this.handleCancel,
