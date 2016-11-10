@@ -77,7 +77,8 @@ webpackJsonp([0],[
 	          },
 	          renderModal: function renderModal() {
 	            return _react2.default.createElement(_antd.Modal, null);
-	          }
+	          },
+	          fileType: 'image/jpeg'
 	        }))
 	      ),
 	      _react2.default.createElement(

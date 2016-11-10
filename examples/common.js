@@ -241,14 +241,15 @@
 	        _this.reset = function () {
 	            _this.onChange(null);
 	        };
-	        _this.selectImage = function (reader) {
+	        _this.selectImage = function (file) {
 	            _this.setState({
-	                previewImage: reader
+	                previewImage: file
 	            });
 	        };
 	        _this.onChange = function (fileblob) {
 	            if (_this.props.onChange) {
-	                _this.props.onChange(fileblob);
+	                var file = new File([fileblob], _this.state.previewImage.name);
+	                _this.props.onChange(file);
 	            }
 	            if (!_this.props.value) {
 	                if (fileblob) {
@@ -4543,9 +4544,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 	
-	function isImage(file) {
-	    return file.type && /^image\//g.test(file.type);
-	}
+	;
 	;
 	
 	var Uploader = function (_React$Component) {
@@ -4564,14 +4563,18 @@
 	            el.click();
 	        };
 	        _this.selectFile = function (ev) {
-	            var reader = new FileReader();
+	            // const reader = new FileReader();
 	            var file = _this.refs.file.files[0];
-	            if (file && isImage(file)) {
-	                reader.readAsDataURL(file);
-	            }
-	            reader.onload = function () {
-	                _this.props.onSelectImage(reader);
-	            };
+	            _this.props.onSelectImage(file);
+	            // if (file && isImage(file)) {
+	            //   reader.readAsDataURL(file);
+	            // }
+	            // reader.onload = () => {
+	            //   this.props.onSelectImage(reader, {
+	            //     name: file.name, 
+	            //     type: file.type,
+	            //   });
+	            // };
 	        };
 	        return _this;
 	    }
@@ -4632,6 +4635,9 @@
 	    return t;
 	};
 	
+	function isImage(file) {
+	    return file.type && /^image\//g.test(file.type);
+	}
 	;
 	var startX = 0;
 	var startY = 0;
@@ -4670,7 +4676,17 @@
 	            _this.refs.Canvas2x.getContext('2d').drawImage(image, left, top, width, height);
 	            _this.refs.Canvas1x.getContext('2d').drawImage(image, left, top, width, height);
 	        }, 100);
+	        _this.readFile = function (file) {
+	            var reader = new FileReader();
+	            if (file && isImage(file)) {
+	                reader.readAsDataURL(file);
+	            }
+	            reader.onload = function () {
+	                return _this.loadImage(reader);
+	            };
+	        };
 	        _this.loadImage = function (reader) {
+	            // const reader = new FileReader();
 	            var image = new Image();
 	            // Although you can use images without CORS approval in your canvas, doing so taints the canvas. 
 	            // Once a canvas has been tainted, you can no longer pull data back out of the canvas. 
@@ -4804,7 +4820,7 @@
 	                _this.setState({
 	                    visible: false
 	                });
-	            });
+	            }, _this.props.image.type);
 	        };
 	        var size = props.size;
 	
@@ -4834,7 +4850,7 @@
 	    }
 	
 	    Cropper.prototype.componentDidMount = function componentDidMount() {
-	        this.loadImage(this.props.image);
+	        this.readFile(this.props.image);
 	        document.addEventListener('mouseup', this.dragEnd);
 	        document.addEventListener('mousemove', this.dragOver);
 	    };
