@@ -70,7 +70,12 @@ online example: http://react-component.github.io/cropping/
 ```js
 var Cropping = require('rc-cropping');
 var React = require('react');
-React.render(<Cropping />, container);
+
+ReactDOM.render(<CropViewer
+  getSpinContent={() => <span>loading...</span> }
+  renderModal={() => <Dialog />}
+  circle={true}
+/>, document.getElementById('__react-content'));
 ```
 
 ## API
@@ -92,6 +97,24 @@ React.render(<Cropping />, container);
           <td>String</td>
           <td></td>
           <td>additional css class of root dom node</td>
+        </tr>
+        <tr>
+          <td>getSpinContent</td>
+          <td>Function() => React.Component<any, any></td>
+          <td></td>
+          <td> spin content of Cropper</td>
+        </tr>
+        <tr>
+          <td>renderModal</td>
+          <td>Function() => React.Component<any, any></td>
+          <td></td>
+          <td> Modal Render of Component, you can pass any React Component to replace it.</td>
+        </tr>
+        <tr>
+          <td>circle</td>
+          <td>boolean</td>
+          <td>false</td>
+          <td> Croppe circle image or not. If true, you'll get a circle picture. Notice: transparent background *ONLY* supported in png file, croppe jpg file will get black background. </td>
         </tr>
     </tbody>
 </table>
