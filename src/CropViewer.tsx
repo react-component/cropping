@@ -19,6 +19,7 @@ export interface CropProps {
 }
 
 export default class CropViewer extends React.Component<CropProps, CropViewerState> {
+  static Cropper = Cropper;
   static defaultProps = {
     prefixCls: 'rc',
     size: [32, 32],
@@ -96,7 +97,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
         circle={circle}
         size={size}
         prefixCls={prefixCls}
-        image={previewImage}
+        file={previewImage}
         onChange={this.onChange}
         renderModal={renderModal}
         spin={getSpinContent()}

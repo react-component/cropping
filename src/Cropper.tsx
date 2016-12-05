@@ -35,17 +35,34 @@ function limit(value: number, limitArray: Array<number>): number {
   return value;
 }
 
+export interface DialogProps {
+  title: any;
+  defaultProps: any;
+  footer: any;
+  visible: boolean;
+  width: number;
+  onCancel: (args?: any) => any;
+  onOk?: (args?: any) => any;
+}
+
 export interface CropperProps {
-  image: File;
+  file: File;
   size: Array<number>;
   onChange: (args: any) => void;
   prefixCls?: string;
   circle?: boolean;
   spin?: React.ComponentElement<any, any>;
-  renderModal?: (args?: any) => React.ComponentElement<any, any>;
+  renderModal?: (args?: any) => React.ComponentElement<DialogProps, any>;
 }
 
 export default class Cropper extends React.Component<CropperProps, any> {
+  static defaultProps = {
+    prefixCls: 'rc',
+    size: [32, 32],
+    circle: false,
+    onChange: () => {},
+  };
+
   refs: {
     viewport: HTMLElement,
     dragger: HTMLElement,
@@ -91,7 +108,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
   }
 
   componentDidMount() {
-    this.readFile(this.props.image);
+    this.readFile(this.props.file);
     document.addEventListener('mouseup', this.dragEnd);
     document.addEventListener('mousemove', this.dragOver);
   }
@@ -110,12 +127,12 @@ export default class Cropper extends React.Component<CropperProps, any> {
   loadImage = (reader: FileReader) => {
     // const reader = new FileReader();
     const image = new Image();
-    // Although you can use images without CORS approval in your canvas, doing so taints the canvas. 
-    // Once a canvas has been tainted, you can no longer pull data back out of the canvas. 
-    // For example, you can no longer use the canvas toBlob(), toDataURL(), or getImageData() methods; 
+    // Although you can use images without CORS approval in your canvas, doing so taints the canvas.
+    // Once a canvas has been tainted, you can no longer pull data back out of the canvas.
+    // For example, you can no longer use the canvas toBlob(), toDataURL(), or getImageData() methods;
     // doing so will throw a security error.
 
-    // This protects users from having private data exposed by using images 
+    // This protects users from having private data exposed by using images
     // to pull information from remote web sites without permission.
 
     image.setAttribute('crossOrigin', 'anonymous');
@@ -176,8 +193,8 @@ export default class Cropper extends React.Component<CropperProps, any> {
     const IdpVar: imageAttr = ΔProportional > 1 ? 'height' : 'width'; // 自变量
     const depVar: imageAttr = ΔProportional > 1 ? 'width' : 'height'; // 因变量
     const scale = Number((viewport[Number(ΔProportional > 1)] / image[IdpVar]).toFixed(4));
-    // console.log('基准缩放属性：', IdpVar,':', image[IdpVar], 'px', 
-    //             '缩放至:', viewport[Number(ΔProportional > 1)], 'px', 
+    // console.log('基准缩放属性：', IdpVar,':', image[IdpVar], 'px',
+    //             '缩放至:', viewport[Number(ΔProportional > 1)], 'px',
     //             '缩放比例：', scale); // tslint:ignore
     const imageState = {
       [IdpVar]: viewport[Number(ΔProportional > 1)],
@@ -253,7 +270,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
       this.setState({
         visible: false,
       });
-    }, this.props.image.type);
+    }, this.props.file.type);
   }
   render() {
     const { prefixCls, size, circle, spin, renderModal } = this.props;
@@ -291,7 +308,6 @@ export default class Cropper extends React.Component<CropperProps, any> {
     ];
     const viewPortStyle = { width: viewport[0], height: viewport[1] };
     const previewClassName = circle ? 'radius' : null;
-    const ModalElement = renderModal();
 
     const cropperElement = image ? (<div className={`${prefixCls}-cropper-wrapper`}>
       <div className={`${prefixCls}-cropper`}>
@@ -341,13 +357,14 @@ export default class Cropper extends React.Component<CropperProps, any> {
     if (image) {
       return (<div>
         {spin}
-        {React.cloneElement(ModalElement, {
+        {renderModal ? React.cloneElement(renderModal(), {
           visible: this.state.visible,
           title: '编辑图片',
           width: 800,
           footer,
           onCancel: this.handleCancel,
-        }, cropperElement)}
+        }, cropperElement) : <div>{cropperElement} {footer}</div>
+      }
       </div>);
     }
 
