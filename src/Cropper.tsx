@@ -256,15 +256,39 @@ export default class Cropper extends React.Component<CropperProps, any> {
     });
   }
   handleOk = () => {
-    const { image, width, height, scale } = this.state;
+    const { image, width, height, scale, viewport } = this.state;
     const scaledImage = downScaleImage(image, scale);
     const canvas = document.createElement('canvas');
-    canvas.style.width = `${this.state.viewport[0]}px`;
-    canvas.style.height = `${this.state.viewport[1]}px`;
-    canvas.setAttribute('width', this.state.viewport[0]);
-    canvas.setAttribute('height', this.state.viewport[1]);
+    canvas.style.width = `${viewport[0]}px`;
+    canvas.style.height = `${viewport[1]}px`;
+    canvas.setAttribute('width', viewport[0]);
+    canvas.setAttribute('height', viewport[1]);
     const context = canvas.getContext('2d');
-    context.drawImage(scaledImage , left, top, width, height);
+
+    // if circle...
+    if (this.props.circle) {
+      context.save();
+      context.beginPath();
+      context.arc(
+        viewport[0] / 2,
+        viewport[1] / 2,
+        Math.min(viewport[0] / 2, viewport[1] / 2),
+        0,
+        Math.PI * 2,
+        true
+      );
+      context.closePath();
+      context.clip();
+    }
+
+    context.drawImage(scaledImage, left, top, width, height);
+
+    if (this.props.circle) {
+      context.beginPath();
+      context.arc(0, 0, 2, 0, Math.PI, true);
+      context.closePath();
+      context.restore();
+    }
     canvas.toBlob( blob => {
       this.props.onChange(blob);
       this.setState({

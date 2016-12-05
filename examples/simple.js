@@ -7,8 +7,8 @@ import 'rc-dialog/assets/index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-ReactDOM.render(<CropViewer 
+ReactDOM.render(<CropViewer
   getSpinContent={() => <span>loading...</span> }
   renderModal={() => <Dialog />}
-  circle={true} 
+  circle={true}
 />, document.getElementById('__react-content'));
