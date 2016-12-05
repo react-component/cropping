@@ -1,14 +1,17 @@
-webpackJsonp([1],{
+webpackJsonp([2],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(792);
+	module.exports = __webpack_require__(794);
 
 
 /***/ },
 
-/***/ 792:
+/***/ 793:
+3,
+
+/***/ 794:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51,10 +54,7 @@ webpackJsonp([1],{
 	  circle: true
 	}), document.getElementById('__react-content'));
 
-/***/ },
-
-/***/ 793:
-3
+/***/ }
 
 });
 //# sourceMappingURL=simple.js.map

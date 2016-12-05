@@ -51,7 +51,7 @@
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		2:0
+/******/ 		3:0
 /******/ 	};
 /******/
 /******/ 	// The require function
@@ -97,7 +97,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 /******/
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({"0":"form","1":"simple"}[chunkId]||chunkId) + ".js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({"0":"form","1":"raw","2":"simple"}[chunkId]||chunkId) + ".js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -298,7 +298,7 @@
 	            return React.createElement("div", { className: prefixCls + '-preview-wrapper' }, React.createElement("div", { className: prefixCls + '-preview' }, React.createElement("div", { className: prefixCls + '-preview-mask', onClick: this.reset }, React.createElement(_Icon2.default, { type: "delete" })), React.createElement("img", { src: selectedImage, width: size[0], height: size[1] })));
 	        }
 	        if (previewImage) {
-	            return React.createElement(_Cropper2.default, { circle: circle, size: size, prefixCls: prefixCls, image: previewImage, onChange: this.onChange, renderModal: renderModal, spin: getSpinContent() });
+	            return React.createElement(_Cropper2.default, { circle: circle, size: size, prefixCls: prefixCls, file: previewImage, onChange: this.onChange, renderModal: renderModal, spin: getSpinContent() });
 	        }
 	        return React.createElement(_Uploader2.default, { prefixCls: prefixCls, onSelectImage: this.selectImage });
 	    };
@@ -308,6 +308,7 @@
 	
 	exports.default = CropViewer;
 	
+	CropViewer.Cropper = _Cropper2.default;
 	CropViewer.defaultProps = {
 	    prefixCls: 'rc',
 	    size: [32, 32],
@@ -4688,11 +4689,11 @@
 	        _this.loadImage = function (reader) {
 	            // const reader = new FileReader();
 	            var image = new Image();
-	            // Although you can use images without CORS approval in your canvas, doing so taints the canvas. 
-	            // Once a canvas has been tainted, you can no longer pull data back out of the canvas. 
-	            // For example, you can no longer use the canvas toBlob(), toDataURL(), or getImageData() methods; 
+	            // Although you can use images without CORS approval in your canvas, doing so taints the canvas.
+	            // Once a canvas has been tainted, you can no longer pull data back out of the canvas.
+	            // For example, you can no longer use the canvas toBlob(), toDataURL(), or getImageData() methods;
 	            // doing so will throw a security error.
-	            // This protects users from having private data exposed by using images 
+	            // This protects users from having private data exposed by using images
 	            // to pull information from remote web sites without permission.
 	            image.setAttribute('crossOrigin', 'anonymous');
 	            image.onload = function () {
@@ -4748,8 +4749,8 @@
 	            var IdpVar = ΔProportional > 1 ? 'height' : 'width'; // 自变量
 	            var depVar = ΔProportional > 1 ? 'width' : 'height'; // 因变量
 	            var scale = Number((viewport[Number(ΔProportional > 1)] / image[IdpVar]).toFixed(4));
-	            // console.log('基准缩放属性：', IdpVar,':', image[IdpVar], 'px', 
-	            //             '缩放至:', viewport[Number(ΔProportional > 1)], 'px', 
+	            // console.log('基准缩放属性：', IdpVar,':', image[IdpVar], 'px',
+	            //             '缩放至:', viewport[Number(ΔProportional > 1)], 'px',
 	            //             '缩放比例：', scale); // tslint:ignore
 	            var imageState = (_imageState = {}, _defineProperty(_imageState, IdpVar, viewport[Number(ΔProportional > 1)]), _defineProperty(_imageState, depVar, viewport[Number(ΔProportional > 1)] / viewport[Number(ΔProportional > 1)] * image[depVar] * scale), _imageState);
 	            _this.setState({
@@ -4805,22 +4806,37 @@
 	                image = _this$state2.image,
 	                width = _this$state2.width,
 	                height = _this$state2.height,
-	                scale = _this$state2.scale;
+	                scale = _this$state2.scale,
+	                viewport = _this$state2.viewport;
 	
 	            var scaledImage = (0, _utils.downScaleImage)(image, scale);
 	            var canvas = document.createElement('canvas');
-	            canvas.style.width = _this.state.viewport[0] + 'px';
-	            canvas.style.height = _this.state.viewport[1] + 'px';
-	            canvas.setAttribute('width', _this.state.viewport[0]);
-	            canvas.setAttribute('height', _this.state.viewport[1]);
+	            canvas.style.width = viewport[0] + 'px';
+	            canvas.style.height = viewport[1] + 'px';
+	            canvas.setAttribute('width', viewport[0]);
+	            canvas.setAttribute('height', viewport[1]);
 	            var context = canvas.getContext('2d');
+	            // if circle...
+	            if (_this.props.circle) {
+	                context.save();
+	                context.beginPath();
+	                context.arc(viewport[0] / 2, viewport[1] / 2, Math.min(viewport[0] / 2, viewport[1] / 2), 0, Math.PI * 2, true);
+	                context.closePath();
+	                context.clip();
+	            }
 	            context.drawImage(scaledImage, left, top, width, height);
+	            if (_this.props.circle) {
+	                context.beginPath();
+	                context.arc(0, 0, 2, 0, Math.PI, true);
+	                context.closePath();
+	                context.restore();
+	            }
 	            canvas.toBlob(function (blob) {
 	                _this.props.onChange(blob);
 	                _this.setState({
 	                    visible: false
 	                });
-	            }, _this.props.image.type);
+	            }, _this.props.file.type);
 	        };
 	        var size = props.size;
 	
@@ -4850,7 +4866,7 @@
 	    }
 	
 	    Cropper.prototype.componentDidMount = function componentDidMount() {
-	        this.readFile(this.props.image);
+	        this.readFile(this.props.file);
 	        document.addEventListener('mouseup', this.dragEnd);
 	        document.addEventListener('mousemove', this.dragOver);
 	    };
@@ -4882,16 +4898,15 @@
 	        var footer = [React.createElement(_Scaler2.default, { key: "scaler", prefixCls: prefixCls, onChange: this.scaleImage, value: scale, min: scaleRange[0], max: scaleRange[1] }), React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', key: "back", type: "ghost", onClick: this.handleCancel }, "Cancel"), React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-primary', key: "submit", type: "primary", onClick: this.handleOk }, "Submit")];
 	        var viewPortStyle = { width: viewport[0], height: viewport[1] };
 	        var previewClassName = circle ? 'radius' : null;
-	        var ModalElement = renderModal();
 	        var cropperElement = image ? React.createElement("div", { className: prefixCls + '-cropper-wrapper' }, React.createElement("div", { className: prefixCls + '-cropper' }, React.createElement("div", { className: prefixCls + '-thumbnail', style: viewPortStyle }, React.createElement("div", { className: "thumbnail-window", style: viewPortStyle }, React.createElement("img", { src: image.src, ref: "viewport", width: width, height: height, style: style })), React.createElement("img", __assign({}, draggerEvents, { ref: "dragger", src: image.src, width: width, height: height, style: style, className: prefixCls + '-background', draggable: false })), scale > scaleRange[0] ? React.createElement("div", { className: "candrag-notice-wrapper", ref: "dragNotice" }, React.createElement("span", { className: "candrag-notice" }, "拖动调整位置")) : null)), React.createElement("div", { className: prefixCls + '-thumbnail-preview' }, React.createElement("h4", null, "预览"), React.createElement("div", { className: "size-2x" }, React.createElement("canvas", { className: previewClassName, ref: "Canvas2x", width: viewport[0], height: viewport[1], style: { width: size[0] * 2, height: size[1] * 2 } }), React.createElement("p", null, "2x: ", size[0] * 2 + 'px * ' + size[1] * 2 + 'px')), React.createElement("div", { className: "size-1x" }, React.createElement("canvas", { className: previewClassName, ref: "Canvas1x", width: viewport[0], height: viewport[1], style: { width: size[0], height: size[1] } }), React.createElement("p", null, "1x: ", size[0] + 'px * ' + size[1] + 'px')))) : null;
 	        if (image) {
-	            return React.createElement("div", null, spin, React.cloneElement(ModalElement, {
+	            return React.createElement("div", null, spin, renderModal ? React.cloneElement(renderModal(), {
 	                visible: this.state.visible,
 	                title: '编辑图片',
 	                width: 800,
 	                footer: footer,
 	                onCancel: this.handleCancel
-	            }, cropperElement));
+	            }, cropperElement) : React.createElement("div", null, cropperElement, " ", footer));
 	        }
 	        return React.createElement("span", null, " loading... ");
 	    };
@@ -4900,6 +4915,13 @@
 	}(React.Component);
 	
 	exports.default = Cropper;
+	
+	Cropper.defaultProps = {
+	    prefixCls: 'rc',
+	    size: [32, 32],
+	    circle: false,
+	    onChange: function onChange() {}
+	};
 	module.exports = exports['default'];
 
 /***/ },

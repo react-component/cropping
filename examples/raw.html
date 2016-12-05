@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>form.js - example - rc-cropping@0.1.0</title>
+  <title>raw.js - example - rc-cropping@0.1.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,7 +257,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="common.css" /><link rel="stylesheet" href="form.css" />
+  <link rel="stylesheet" href="common.css" /><link rel="stylesheet" href="raw.css" />
 </head>
 
 <body>
@@ -269,64 +269,62 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     </div>
     <div class="example" id="__react-content"></div>
 
-    <div class="highlight"><pre><code language="undefined">// use jsx to render html, do not modify simple.html
-import 'antd/dist/antd.less';
-import 'rc-cropping/assets/index.css';
-import CropViewer from 'rc-cropping';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Form, Button, Modal, Spin } from 'antd';
+    <div class="highlight"><pre><code language="js"><span class="hljs-comment">// use jsx to render html, do not modify simple.html</span>
 
-const FormItem = Form.Item;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-cropping/assets/index.css'</span>;
+<span class="hljs-keyword">import</span> CropViewer, { Cropper } <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-cropping'</span>;
+<span class="hljs-keyword">import</span> Dialog <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-dialog'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-dialog/assets/index.css'</span>;
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
 
-const NormalLoginForm = Form.create()(React.createClass({
-  handleSubmit(e) {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) =&gt; {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">CropperContainer</span>(<span class="hljs-params">props</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
+    {props.title}
+    {props.children}
+    {props.footer}
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+}
+
+<span class="hljs-keyword">const</span> Test = React.createClass({
+  getInitialState() {
+    <span class="hljs-keyword">return</span> {
+      file: <span class="hljs-literal">null</span>,
+      croppedFile: <span class="hljs-literal">null</span>,
+    };
+  },
+  onChange(ev) {
+    <span class="hljs-keyword">this</span>.setState({ file: <span class="hljs-keyword">this</span>.refs.file.files[<span class="hljs-number">0</span>] });
+  },
+  croppeFile(fileBlob) {
+    <span class="hljs-keyword">const</span> reader = <span class="hljs-keyword">new</span> FileReader();
+    reader.readAsDataURL(fileBlob);
+    reader.onload = () =&gt; {
+      <span class="hljs-keyword">this</span>.setState({
+        croppedFile: reader.result,
+      });
+    }
   },
   render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
-    };
+    <span class="hljs-keyword">const</span> { croppedFile, file } = <span class="hljs-keyword">this</span>.state;
+    <span class="hljs-keyword">if</span> (croppedFile) {
+      <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">img</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">{croppedFile}</span> /&gt;</span>;</span>
+    }
+    <span class="hljs-keyword">if</span> (!file) {
+      <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"file"</span> <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.onChange}</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">"file"</span> /&gt;</span>
+    }
+    return <span class="hljs-tag">&lt;<span class="hljs-title">Cropper</span>
+      <span class="hljs-attribute">size</span>=<span class="hljs-value">{[64,</span> <span class="hljs-attribute">64</span>]}
+      <span class="hljs-attribute">file</span>=<span class="hljs-value">{this.state.file}</span>
+      <span class="hljs-attribute">getSpinContent</span>=<span class="hljs-value">{()</span> =&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> }
+      renderModal={(props) =&gt; <span class="hljs-tag">&lt;<span class="hljs-title">CropperContainer</span> {<span class="hljs-attribute">...props</span>} /&gt;</span>}
+      onChange={this.croppeFile}
+    /&gt;;</span>
+  }
+});
 
-    const tailFormItemLayout = {
-      wrapperCol: {
-        span: 14,
-        offset: 6,
-      },
-    };
-
-    return (
-      &lt;Form onSubmit={this.handleSubmit} className="login-form" &gt;
-        &lt;FormItem label="请上传您的头像：" {...formItemLayout} &gt;
-          {getFieldDecorator('file')(
-            &lt;CropViewer 
-              size={[64, 64]} 
-              thumbnailSizes={[[64, 64], [32, 32]]}
-              getSpinContent={() =&gt; &lt;Spin /&gt; }
-              renderModal={() =&gt; &lt;Modal /&gt;}
-              fileType="image/jpeg"
-            /&gt;
-          )}
-        &lt;/FormItem&gt;
-        &lt;FormItem {...tailFormItemLayout}&gt;
-          &lt;Button type="primary" htmlType="submit" className="login-form-button"&gt;
-            Submit
-          &lt;/Button&gt;
-        &lt;/FormItem&gt;
-      &lt;/Form&gt;
-    );
-  },
-}));
-
-ReactDOM.render(&lt;NormalLoginForm /&gt;, document.getElementById('__react-content'));
-</code></pre></div>
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span> /&gt;</span>, document.getElementById('__react-content'));
+</span></code></pre></div>
   </div>
   <a href="https://github.com/react-component/cropping">
     <img style="position: absolute; top: 0; right: 0; border: 0;"
@@ -336,7 +334,7 @@ ReactDOM.render(&lt;NormalLoginForm /&gt;, document.getElementById('__react-cont
   </a>
   <script>FastClick.attach(document.body);</script>
   <script src="common.js?nowrap"></script>
-  <script src="form.js?nowrap"></script>
+  <script src="raw.js?nowrap"></script>
 </body>
 
 </html>
