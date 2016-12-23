@@ -229,7 +229,20 @@
 	
 	        var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 	
-	        _this.loadSelectedImage = function (blob) {
+	        _this.loadSelectedImage = function (blobOrString) {
+	            if (typeof blobOrString === 'string') {
+	                var image = new Image();
+	                image.onload = function () {
+	                    _this.setState({
+	                        selectedImage: blobOrString
+	                    });
+	                };
+	                image.src = blobOrString;
+	            } else {
+	                _this.readBlob(blobOrString);
+	            }
+	        };
+	        _this.readBlob = function (blob) {
 	            var reader = new FileReader();
 	            reader.readAsDataURL(blob);
 	            reader.onload = function () {
@@ -300,7 +313,7 @@
 	        if (previewImage) {
 	            return React.createElement(_Cropper2.default, { circle: circle, size: size, prefixCls: prefixCls, file: previewImage, onChange: this.onChange, renderModal: renderModal, spin: getSpinContent() });
 	        }
-	        return React.createElement(_Uploader2.default, { prefixCls: prefixCls, onSelectImage: this.selectImage });
+	        return React.createElement(_Uploader2.default, { prefixCls: prefixCls, onSelectImage: this.selectImage }, this.props.children);
 	    };
 	
 	    return CropViewer;
@@ -4564,18 +4577,8 @@
 	            el.click();
 	        };
 	        _this.selectFile = function (ev) {
-	            // const reader = new FileReader();
 	            var file = _this.refs.file.files[0];
 	            _this.props.onSelectImage(file);
-	            // if (file && isImage(file)) {
-	            //   reader.readAsDataURL(file);
-	            // }
-	            // reader.onload = () => {
-	            //   this.props.onSelectImage(reader, {
-	            //     name: file.name, 
-	            //     type: file.type,
-	            //   });
-	            // };
 	        };
 	        return _this;
 	    }
@@ -4583,7 +4586,7 @@
 	    Uploader.prototype.render = function render() {
 	        var prefixCls = this.props.prefixCls;
 	
-	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", style: { display: 'none' }, onChange: this.selectFile }), React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload");
+	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
 	    };
 	
 	    return Uploader;

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>form.js - example - rc-cropping@0.1.1</title>
+  <title>form.js - example - rc-cropping@0.1.2</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -263,7 +263,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-cropping@0.1.1</h1>
+      <h1>rc-cropping@0.1.2</h1>
 
       <p>CropViewer ui component for react</p>
     </div>
@@ -305,14 +305,14 @@ const NormalLoginForm = Form.create()(React.createClass({
     return (
       &lt;Form onSubmit={this.handleSubmit} className="login-form" &gt;
         &lt;FormItem label="请上传您的头像：" {...formItemLayout} &gt;
-          {getFieldDecorator('file')(
-            &lt;CropViewer 
-              size={[64, 64]} 
+          {getFieldDecorator('file', { initialValue: 'https://avatars2.githubusercontent.com/u/566097?v=3&amp;s=88'})(
+            &lt;CropViewer
+              size={[64, 64]}
               thumbnailSizes={[[64, 64], [32, 32]]}
               getSpinContent={() =&gt; &lt;Spin /&gt; }
               renderModal={() =&gt; &lt;Modal /&gt;}
               fileType="image/jpeg"
-            /&gt;
+            &gt;请上传文件&lt;/CropViewer&gt;
           )}
         &lt;/FormItem&gt;
         &lt;FormItem {...tailFormItemLayout}&gt;

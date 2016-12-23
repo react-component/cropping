@@ -69,17 +69,21 @@ webpackJsonp([0],[
 	      _react2.default.createElement(
 	        FormItem,
 	        _extends({ label: '\u8BF7\u4E0A\u4F20\u60A8\u7684\u5934\u50CF\uFF1A' }, formItemLayout),
-	        getFieldDecorator('file')(_react2.default.createElement(_rcCropping2.default, {
-	          size: [64, 64],
-	          thumbnailSizes: [[64, 64], [32, 32]],
-	          getSpinContent: function getSpinContent() {
-	            return _react2.default.createElement(_antd.Spin, null);
+	        getFieldDecorator('file', { initialValue: 'https://avatars2.githubusercontent.com/u/566097?v=3&s=88' })(_react2.default.createElement(
+	          _rcCropping2.default,
+	          {
+	            size: [64, 64],
+	            thumbnailSizes: [[64, 64], [32, 32]],
+	            getSpinContent: function getSpinContent() {
+	              return _react2.default.createElement(_antd.Spin, null);
+	            },
+	            renderModal: function renderModal() {
+	              return _react2.default.createElement(_antd.Modal, null);
+	            },
+	            fileType: 'image/jpeg'
 	          },
-	          renderModal: function renderModal() {
-	            return _react2.default.createElement(_antd.Modal, null);
-	          },
-	          fileType: 'image/jpeg'
-	        }))
+	          '\u8BF7\u4E0A\u4F20\u6587\u4EF6'
+	        ))
 	      ),
 	      _react2.default.createElement(
 	        FormItem,
