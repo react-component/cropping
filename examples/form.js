@@ -34,14 +34,14 @@ const NormalLoginForm = Form.create()(React.createClass({
     return (
       <Form onSubmit={this.handleSubmit} className="login-form" >
         <FormItem label="请上传您的头像：" {...formItemLayout} >
-          {getFieldDecorator('file')(
-            <CropViewer 
-              size={[64, 64]} 
+          {getFieldDecorator('file', { initialValue: 'https://avatars2.githubusercontent.com/u/566097?v=3&s=88'})(
+            <CropViewer
+              size={[64, 64]}
               thumbnailSizes={[[64, 64], [32, 32]]}
               getSpinContent={() => <Spin /> }
               renderModal={() => <Modal />}
               fileType="image/jpeg"
-            />
+            >请上传文件</CropViewer>
           )}
         </FormItem>
         <FormItem {...tailFormItemLayout}>

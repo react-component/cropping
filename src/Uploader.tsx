@@ -26,25 +26,14 @@ export default class Uploader extends React.Component<UploaderProps, any> {
   }
 
   selectFile = (ev) => {
-    // const reader = new FileReader();
     const file = this.refs.file.files[0];
     this.props.onSelectImage(file);
-    // if (file && isImage(file)) {
-    //   reader.readAsDataURL(file);
-    // }
-
-    // reader.onload = () => {
-    //   this.props.onSelectImage(reader, {
-    //     name: file.name, 
-    //     type: file.type,
-    //   });
-    // };
   }
   render() {
     const { prefixCls } = this.props;
     return (<button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} type="ghost" onClick={this.onClick}>
       <input type="file" ref="file" style={{display: 'none'}} onChange={this.selectFile}/>
-      <Icon type="upload" /> Click to Upload
+      {this.props.children || <span><Icon type="upload" /> Click to Upload </span>}
     </button>);
   }
 }

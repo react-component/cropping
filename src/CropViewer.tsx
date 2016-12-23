@@ -45,7 +45,21 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
       });
     }
   }
-  loadSelectedImage = (blob: Blob) => {
+  loadSelectedImage = (blobOrString: Blob | string) => {
+    if (typeof blobOrString === 'string') {
+      const image = new Image();
+      image.onload = () => {
+        this.setState({
+          selectedImage: blobOrString,
+        });
+      };
+      image.src = blobOrString;
+    } else {
+      this.readBlob(blobOrString);
+    }
+
+  }
+  readBlob = (blob: Blob) => {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     reader.onload = () => {
@@ -103,6 +117,10 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
         spin={getSpinContent()}
       />;
     }
-    return <Uploader prefixCls={prefixCls} onSelectImage={this.selectImage}/>;
+    return <Uploader
+      prefixCls={prefixCls}
+      onSelectImage={this.selectImage}>
+      {this.props.children}
+    </Uploader>;
   }
 };
