@@ -248,7 +248,7 @@
 	        };
 	        _this.onChange = function (fileblob) {
 	            if (_this.props.onChange) {
-	                var file = new File([fileblob], _this.state.previewImage.name, { type: _this.state.previewImage.type });
+	                var file = fileblob ? new File([fileblob], _this.state.previewImage.name, { type: _this.state.previewImage.type }) : null;
 	                _this.props.onChange(file);
 	            }
 	            if (!_this.props.value) {
