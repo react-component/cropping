@@ -3,12 +3,12 @@ webpackJsonp([1],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(792);
+	module.exports = __webpack_require__(793);
 
 
 /***/ },
 
-/***/ 792:
+/***/ 793:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19,11 +19,11 @@ webpackJsonp([1],{
 	
 	var _rcCropping2 = _interopRequireDefault(_rcCropping);
 	
-	var _rcDialog = __webpack_require__(537);
+	var _rcDialog = __webpack_require__(538);
 	
 	var _rcDialog2 = _interopRequireDefault(_rcDialog);
 	
-	__webpack_require__(793);
+	__webpack_require__(794);
 	
 	var _react = __webpack_require__(7);
 	
@@ -102,7 +102,7 @@ webpackJsonp([1],{
 
 /***/ },
 
-/***/ 793:
+/***/ 794:
 3
 
 });

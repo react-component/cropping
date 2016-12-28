@@ -4613,7 +4613,11 @@
 	
 	var _Scaler2 = _interopRequireDefault(_Scaler);
 	
-	var _utils = __webpack_require__(325);
+	var _canvasToBlob = __webpack_require__(325);
+	
+	var _canvasToBlob2 = _interopRequireDefault(_canvasToBlob);
+	
+	var _utils = __webpack_require__(326);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -4834,12 +4838,20 @@
 	                context.closePath();
 	                context.restore();
 	            }
-	            canvas.toBlob(function (blob) {
-	                _this.props.onChange(blob);
+	            if (canvas.toBlob) {
+	                canvas.toBlob(function (blob) {
+	                    _this.props.onChange(blob);
+	                    _this.setState({
+	                        visible: false
+	                    });
+	                }, _this.props.file.type);
+	            } else {
+	                var dataUrl = canvas.toDataURL(_this.props.file.type);
+	                _this.props.onChange((0, _canvasToBlob2.default)(dataUrl));
 	                _this.setState({
 	                    visible: false
 	                });
-	            }, _this.props.file.type);
+	            }
 	        };
 	        var size = props.size;
 	
@@ -29281,6 +29293,96 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	/*
+	 * JavaScript Canvas to Blob
+	 * https://github.com/blueimp/JavaScript-Canvas-to-Blob
+	 *
+	 * Copyright 2012, Sebastian Tschan
+	 * https://blueimp.net
+	 *
+	 * Licensed under the MIT license:
+	 * http://www.opensource.org/licenses/MIT
+	 *
+	 * Based on stackoverflow user Stoive's code snippet:
+	 * http://stackoverflow.com/q/4998908
+	 */
+	/* global atob, Blob, define */
+	var CanvasPrototype = window.HTMLCanvasElement && window.HTMLCanvasElement.prototype;
+	var hasBlobConstructor = window.Blob && function () {
+	    try {
+	        return Boolean(new Blob());
+	    } catch (e) {
+	        return false;
+	    }
+	}();
+	var hasArrayBufferViewSupport = hasBlobConstructor && window.Uint8Array && function () {
+	    try {
+	        return new Blob([new Uint8Array(100)]).size === 100;
+	    } catch (e) {
+	        return false;
+	    }
+	}();
+	var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+	var dataURIPattern = /^data:((.*?)(;charset=.*?)?)(;base64)?,/;
+	var dataURLtoBlob = (hasBlobConstructor || BlobBuilder) && window.atob && window.ArrayBuffer && window.Uint8Array && function (dataURI) {
+	    var matches, mediaType, isBase64, dataString, byteString, arrayBuffer, intArray, i, bb;
+	    // Parse the dataURI components as per RFC 2397
+	    matches = dataURI.match(dataURIPattern);
+	    if (!matches) {
+	        throw new Error('invalid data URI');
+	    }
+	    // Default to text/plain;charset=US-ASCII
+	    mediaType = matches[2] ? matches[1] : 'text/plain' + (matches[3] || ';charset=US-ASCII');
+	    isBase64 = !!matches[4];
+	    dataString = dataURI.slice(matches[0].length);
+	    if (isBase64) {
+	        // Convert base64 to raw binary data held in a string:
+	        byteString = atob(dataString);
+	    } else {
+	        // Convert base64/URLEncoded data component to raw binary:
+	        byteString = decodeURIComponent(dataString);
+	    }
+	    // Write the bytes of the string to an ArrayBuffer:
+	    arrayBuffer = new ArrayBuffer(byteString.length);
+	    intArray = new Uint8Array(arrayBuffer);
+	    for (i = 0; i < byteString.length; i += 1) {
+	        intArray[i] = byteString.charCodeAt(i);
+	    }
+	    // Write the ArrayBuffer (or ArrayBufferView) to a blob:
+	    if (hasBlobConstructor) {
+	        return new Blob([hasArrayBufferViewSupport ? intArray : arrayBuffer], { type: mediaType });
+	    }
+	    bb = new BlobBuilder();
+	    bb.append(arrayBuffer);
+	    return bb.getBlob(mediaType);
+	};
+	if (window.HTMLCanvasElement && !CanvasPrototype.toBlob) {
+	    if (CanvasPrototype.mozGetAsFile) {
+	        CanvasPrototype.toBlob = function (callback, type, quality) {
+	            if (quality && CanvasPrototype.toDataURL && dataURLtoBlob) {
+	                callback(dataURLtoBlob(this.toDataURL(type, quality)));
+	            } else {
+	                callback(this.mozGetAsFile('blob', type));
+	            }
+	        };
+	    } else if (CanvasPrototype.toDataURL && dataURLtoBlob) {
+	        CanvasPrototype.toBlob = function (callback, type, quality) {
+	            callback(dataURLtoBlob(this.toDataURL(type, quality)));
+	        };
+	    }
+	}
+	exports.default = dataURLtoBlob;
+	module.exports = exports['default'];
+
+/***/ },
+/* 326 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	exports.debounce = debounce;
 	exports.applyTransform = applyTransform;
 	exports.downScaleImage = downScaleImage;
@@ -29476,7 +29578,6 @@
 	/* tslint:enable */
 
 /***/ },
-/* 326 */,
 /* 327 */,
 /* 328 */,
 /* 329 */,
@@ -29490,7 +29591,8 @@
 /* 337 */,
 /* 338 */,
 /* 339 */,
-/* 340 */
+/* 340 */,
+/* 341 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30015,7 +30117,6 @@
 	module.exports = KeyCode;
 
 /***/ },
-/* 341 */,
 /* 342 */,
 /* 343 */,
 /* 344 */,
@@ -30211,7 +30312,8 @@
 /* 534 */,
 /* 535 */,
 /* 536 */,
-/* 537 */
+/* 537 */,
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30224,7 +30326,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Dialog = __webpack_require__(538);
+	var _Dialog = __webpack_require__(539);
 	
 	var _Dialog2 = _interopRequireDefault(_Dialog);
 	
@@ -30290,7 +30392,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 538 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30307,7 +30409,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _KeyCode = __webpack_require__(340);
+	var _KeyCode = __webpack_require__(341);
 	
 	var _KeyCode2 = _interopRequireDefault(_KeyCode);
 	
@@ -30315,11 +30417,11 @@
 	
 	var _rcAnimate2 = _interopRequireDefault(_rcAnimate);
 	
-	var _LazyRenderBox = __webpack_require__(539);
+	var _LazyRenderBox = __webpack_require__(540);
 	
 	var _LazyRenderBox2 = _interopRequireDefault(_LazyRenderBox);
 	
-	var _getScrollBarSize = __webpack_require__(540);
+	var _getScrollBarSize = __webpack_require__(541);
 	
 	var _getScrollBarSize2 = _interopRequireDefault(_getScrollBarSize);
 	
@@ -30602,7 +30704,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 539 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30652,7 +30754,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 540 */
+/* 541 */
 /***/ function(module, exports) {
 
 	'use strict';
