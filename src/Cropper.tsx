@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Scaler from './Scaler';
 export type imageAttr = 'width' | 'height';
+import dataURLtoBlob from './canvasToBlob';
 import { debounce, downScaleImage, applyTransform } from './utils';
 
 function isImage(file: File) {
@@ -289,12 +290,20 @@ export default class Cropper extends React.Component<CropperProps, any> {
       context.closePath();
       context.restore();
     }
-    canvas.toBlob( blob => {
-      this.props.onChange(blob);
+    if (canvas.toBlob) {
+      canvas.toBlob( blob => {
+        this.props.onChange(blob);
+        this.setState({
+          visible: false,
+        });
+      }, this.props.file.type);
+    } else {
+      const dataUrl = canvas.toDataURL(this.props.file.type);
+      this.props.onChange(dataURLtoBlob(dataUrl));
       this.setState({
         visible: false,
       });
-    }, this.props.file.type);
+    }
   }
   render() {
     const { prefixCls, size, circle, spin, renderModal } = this.props;
