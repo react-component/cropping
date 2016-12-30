@@ -11,4 +11,5 @@ ReactDOM.render(<CropViewer
   getSpinContent={() => <span>loading...</span> }
   renderModal={() => <Dialog />}
   circle={true}
+  locale='zh-CN'
 />, document.getElementById('__react-content'));

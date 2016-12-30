@@ -32,7 +32,7 @@ export default class Uploader extends React.Component<UploaderProps, any> {
   render() {
     const { prefixCls } = this.props;
     return (<button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} type="ghost" onClick={this.onClick}>
-      <input type="file" ref="file" style={{display: 'none'}} onChange={this.selectFile}/>
+      <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.selectFile}/>
       {this.props.children || <span><Icon type="upload" /> Click to Upload </span>}
     </button>);
   }

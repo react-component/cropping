@@ -2,7 +2,7 @@ import * as React from 'react';
 import Scaler from './Scaler';
 export type imageAttr = 'width' | 'height';
 import dataURLtoBlob from './canvasToBlob';
-import { debounce, downScaleImage, applyTransform } from './utils';
+import { debounce, downScaleImage, applyTransform, getLocale } from './utils';
 
 function isImage(file: File) {
   return file.type && /^image\//g.test(file.type);
@@ -54,6 +54,7 @@ export interface CropperProps {
   circle?: boolean;
   spin?: React.ComponentElement<any, any>;
   renderModal?: (args?: any) => React.ComponentElement<DialogProps, any>;
+  locale?: String;
 }
 
 export default class Cropper extends React.Component<CropperProps, any> {
@@ -62,6 +63,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
     size: [32, 32],
     circle: false,
     onChange: () => {},
+    locale: 'en-US',
   };
 
   refs: {
@@ -266,6 +268,11 @@ export default class Cropper extends React.Component<CropperProps, any> {
     canvas.setAttribute('height', viewport[1]);
     const context = canvas.getContext('2d');
 
+    if (!/image\/png/g.test(this.props.file.type)) {
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, viewport[0], viewport[1]);
+    }
+
     // if circle...
     if (this.props.circle) {
       context.save();
@@ -328,7 +335,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
         type="ghost"
         onClick={this.handleCancel}
       >
-        Cancel
+        {getLocale('cancel', this.props.locale)}
       </button>,
       <button
         className={`${prefixCls}-btn ${prefixCls}-btn-primary`}
@@ -336,7 +343,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
         type="primary"
         onClick={this.handleOk}
       >
-        Submit
+         {getLocale('submit', this.props.locale)}
       </button>,
     ];
     const viewPortStyle = { width: viewport[0], height: viewport[1] };
@@ -359,12 +366,12 @@ export default class Cropper extends React.Component<CropperProps, any> {
             draggable={false}
           />
           {scale > scaleRange[0] ? <div className="candrag-notice-wrapper" ref="dragNotice">
-            <span className="candrag-notice">拖动调整位置</span>
+            <span className="candrag-notice">{getLocale('drag to crop', this.props.locale)}</span>
           </div> : null}
         </div>
       </div>
       <div className={`${prefixCls}-thumbnail-preview`}>
-        <h4>预览</h4>
+        <h4>{getLocale('preview', this.props.locale)}</h4>
         <div className="size-2x">
           <canvas
             className={previewClassName}
@@ -392,7 +399,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
         {spin}
         {renderModal ? React.cloneElement(renderModal(), {
           visible: this.state.visible,
-          title: '编辑图片',
+          title: getLocale('edit picture', this.props.locale),
           width: 800,
           footer,
           onCancel: this.handleCancel,

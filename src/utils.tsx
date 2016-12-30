@@ -81,13 +81,13 @@ function downScaleCanvas(cv, scale) {
     var tBuffer = new Float32Array(3 * tw * th); // target buffer Float32 rgb
     var sR = 0, sG = 0,  sB = 0; // source's current point r,g,b
     /* untested !
-    var sA = 0;  //source alpha  */    
+    var sA = 0;  //source alpha  */
 
     for (sy = 0; sy < sh; sy++) {
         ty = sy * scale; // y src position within target
         tY = 0 | ty;     // rounded : target pixel's y
         yIndex = 3 * tY * tw;  // line index within target array
-        crossY = (tY != (0 | ty + scale)); 
+        crossY = (tY != (0 | ty + scale));
         if (crossY) { // if pixel is crossing botton target pixel
             wy = (tY + 1 - ty); // weight of point within target pixel
             nwy = (ty + scale - tY - 1); // ... within y+1 target pixel
@@ -125,7 +125,7 @@ function downScaleCanvas(cv, scale) {
                 tBuffer[tIndex    ] += sR * w;
                 tBuffer[tIndex + 1] += sG * w;
                 tBuffer[tIndex + 2] += sB * w;
-                // add weighted component for next (tX+1) px                
+                // add weighted component for next (tX+1) px
                 nw = nwx * scale
                 tBuffer[tIndex + 3] += sR * nw;
                 tBuffer[tIndex + 4] += sG * nw;
@@ -136,7 +136,7 @@ function downScaleCanvas(cv, scale) {
                 tBuffer[tIndex    ] += sR * w;
                 tBuffer[tIndex + 1] += sG * w;
                 tBuffer[tIndex + 2] += sB * w;
-                // add weighted component for next (tY+1) px                
+                // add weighted component for next (tY+1) px
                 nw = nwy * scale
                 tBuffer[tIndex + 3 * tw    ] += sR * nw;
                 tBuffer[tIndex + 3 * tw + 1] += sG * nw;
@@ -163,7 +163,7 @@ function downScaleCanvas(cv, scale) {
                 tBuffer[tIndex + 3 * tw + 4] += sG * nw;
                 tBuffer[tIndex + 3 * tw + 5] += sB * nw;
             }
-        } // end for sx 
+        } // end for sx
     } // end for sy
 
     // create result canvas
@@ -174,7 +174,7 @@ function downScaleCanvas(cv, scale) {
     var imgRes = resCtx.getImageData(0, 0, tw, th);
     var tByteBuffer = imgRes.data;
     // convert float32 array into a UInt8Clamped Array
-    var pxIndex = 0; //  
+    var pxIndex = 0; //
     for (sIndex = 0, tIndex = 0; pxIndex < tw * th; sIndex += 3, tIndex += 4, pxIndex++) {
         tByteBuffer[tIndex] = Math.ceil(tBuffer[sIndex]);
         tByteBuffer[tIndex + 1] = Math.ceil(tBuffer[sIndex + 1]);
@@ -187,3 +187,14 @@ function downScaleCanvas(cv, scale) {
 }
 
 /* tslint:enable */
+
+import zhCN from '../locale/zh_CN';
+import enUS from '../locale/en_US';
+
+export function getLocale(text, locale) {
+    const dict = locale === 'en-US' ? enUS : zhCN;
+    if (dict.hasOwnProperty(text)) {
+      return dict[text];
+    }
+    return text;
+}

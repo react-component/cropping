@@ -16,6 +16,7 @@ export interface CropProps {
   circle?: boolean;
   renderModal: (args?: any) => React.ComponentElement<any, any>;
   getSpinContent: () => React.ComponentElement<any, any>;
+  locale?: String;
 }
 
 export default class CropViewer extends React.Component<CropProps, CropViewerState> {
@@ -24,6 +25,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
     prefixCls: 'rc',
     size: [32, 32],
     circle: false,
+    locale: 'en-US',
   };
   constructor(props) {
     super(props);
@@ -94,7 +96,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
   }
   render() {
     const { previewImage, selectedImage } = this.state;
-    const { prefixCls, size, circle, getSpinContent, renderModal} = this.props;
+    const { prefixCls, size, circle, getSpinContent, renderModal, locale } = this.props;
 
     if (selectedImage) {
       return <div className={`${prefixCls}-preview-wrapper`}>
@@ -115,6 +117,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
         onChange={this.onChange}
         renderModal={renderModal}
         spin={getSpinContent()}
+        locale={locale}
       />;
     }
     return <Uploader
