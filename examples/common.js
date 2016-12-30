@@ -29610,16 +29610,16 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.default = {
-	  upload: '上传',
-	  submit: '提交',
-	  cancel: '取消',
-	  preview: '预览',
-	  'edit picture': '编辑图片',
-	  'drag to crop': '拖动以调整大小',
-	  'click to upload': '点击上传'
+	    upload: '上传',
+	    submit: '提交',
+	    cancel: '取消',
+	    preview: '预览',
+	    'edit picture': '编辑图片',
+	    'drag to crop': '拖动以调整大小',
+	    'click to upload': '点击上传'
 	};
 	module.exports = exports['default'];
 
@@ -29630,16 +29630,16 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 	exports.default = {
-	  upload: 'Upload',
-	  submit: 'Submit',
-	  cancel: 'Cancel',
-	  preview: 'Preview',
-	  'edit picture': 'Edit Picture',
-	  'drag to crop': 'Drag to Crop',
-	  'click to upload': 'Click to upload'
+	    upload: 'Upload',
+	    submit: 'Submit',
+	    cancel: 'Cancel',
+	    preview: 'Preview',
+	    'edit picture': 'Edit Picture',
+	    'drag to crop': 'Drag to Crop',
+	    'click to upload': 'Click to upload'
 	};
 	module.exports = exports['default'];
 
