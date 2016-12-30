@@ -26,11 +26,11 @@ React Cropping Component
 
 ## Feature
 
-* cropping pictures in facebook mode.
-* cropping result preview.
-* supports exporting circle and square picture.
-* i18n.
-* [in future] rotate picture.
+* Cropping pictures in facebook mode.
+* Cropping result preview.
+* Supports exporting circle and square picture.
+* I18n.
+* [FUTURE] Rotate picture.
 
 ## Screenshots
 
