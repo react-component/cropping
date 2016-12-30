@@ -1,3 +1,6 @@
+import zhCN from '../locale/zh_CN';
+import enUS from '../locale/en_US';
+
 export function debounce(func, wait, immediate: boolean = false) {
   let timeout;
   return function debounceFunc() {
@@ -187,9 +190,6 @@ function downScaleCanvas(cv, scale) {
 }
 
 /* tslint:enable */
-
-import zhCN from '../locale/zh_CN';
-import enUS from '../locale/en_US';
 
 export function getLocale(text, locale) {
     const dict = locale === 'en-US' ? enUS : zhCN;

@@ -1,6 +1,6 @@
 {
   "name": "rc-cropping",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "CropViewer ui component for react",
   "keywords": [
     "react",
@@ -19,6 +19,7 @@
   },
   "files": [
     "lib",
+    "locale",
     "assets/*.css"
   ],
   "licenses": "MIT",
