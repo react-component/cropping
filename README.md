@@ -1,7 +1,7 @@
 # rc-cropping
 ---
 
-React cropping Component
+React Cropping Component
 
 
 [![NPM version][npm-image]][npm-url]
@@ -10,9 +10,6 @@ React cropping Component
 [![gemnasium deps][gemnasium-image]][gemnasium-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
-[![Sauce Test Status](https://saucelabs.com/buildstatus/rc-cropping)](https://saucelabs.com/u/rc-cropping)
-
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/rc-cropping.svg)](https://saucelabs.com/u/rc-cropping)
 
 [npm-image]: http://img.shields.io/npm/v/rc-cropping.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-cropping
@@ -27,12 +24,13 @@ React cropping Component
 [download-image]: https://img.shields.io/npm/dm/rc-cropping.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rc-cropping
 
+## Feature
 
-## Browser Support
-
-|![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) | ![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)|
-| --- | --- | --- | --- | --- |
-| IE 8+ ✔ | Chrome 31.0+ ✔ | Firefox 31.0+ ✔ | Opera 30.0+ ✔ | Safari 7.0+ ✔ |
+* cropping pictures in facebook mode.
+* cropping result preview.
+* supports exporting circle and square picture.
+* i18n.
+* [in future] rotate picture.
 
 ## Screenshots
 
@@ -52,12 +50,6 @@ http://localhost:8001/examples/
 
 
 online example: http://react-component.github.io/cropping/
-
-
-## Feature
-
-* support ie8,ie8+,chrome,firefox,safari
-
 
 ## install
 
@@ -111,10 +103,16 @@ ReactDOM.render(<CropViewer
           <td> Modal Render of Component, you can pass any React Component to replace it.</td>
         </tr>
         <tr>
+          <td>locale</td>
+          <td>'en-US' | 'zh-CN'</td>
+          <td></td>
+          <td> i18n locale.</td>
+        </tr>
+        <tr>
           <td>circle</td>
           <td>boolean</td>
           <td>false</td>
-          <td> Croppe circle image or not. If true, you'll get a circle picture. Notice: transparent background *ONLY* supported in png file, croppe jpg file will get black background. </td>
+          <td> Croppe circle image or not. If true, you'll get a circle picture. Notice: transparent background *ONLY* supported in png file, croppe jpg file will get white background. </td>
         </tr>
     </tbody>
 </table>
