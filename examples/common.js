@@ -29594,6 +29594,7 @@
 	    resCtx.putImageData(imgRes, 0, 0);
 	    return resCV;
 	}
+	/* tslint:enable */
 	function getLocale(text, locale) {
 	    var dict = locale === 'en-US' ? _en_US2.default : _zh_CN2.default;
 	    if (dict.hasOwnProperty(text)) {
