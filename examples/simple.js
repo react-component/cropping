@@ -3,15 +3,15 @@ webpackJsonp([2],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(795);
+	module.exports = __webpack_require__(797);
 
 
 /***/ },
 
-/***/ 794:
+/***/ 796:
 3,
 
-/***/ 795:
+/***/ 797:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22,11 +22,11 @@ webpackJsonp([2],{
 	
 	var _rcCropping2 = _interopRequireDefault(_rcCropping);
 	
-	var _rcDialog = __webpack_require__(538);
+	var _rcDialog = __webpack_require__(540);
 	
 	var _rcDialog2 = _interopRequireDefault(_rcDialog);
 	
-	__webpack_require__(794);
+	__webpack_require__(796);
 	
 	var _react = __webpack_require__(7);
 	
@@ -51,7 +51,8 @@ webpackJsonp([2],{
 	  renderModal: function renderModal() {
 	    return _react2.default.createElement(_rcDialog2.default, null);
 	  },
-	  circle: true
+	  circle: true,
+	  locale: 'zh-CN'
 	}), document.getElementById('__react-content'));
 
 /***/ }

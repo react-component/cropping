@@ -305,13 +305,14 @@
 	            size = _props.size,
 	            circle = _props.circle,
 	            getSpinContent = _props.getSpinContent,
-	            renderModal = _props.renderModal;
+	            renderModal = _props.renderModal,
+	            locale = _props.locale;
 	
 	        if (selectedImage) {
 	            return React.createElement("div", { className: prefixCls + '-preview-wrapper' }, React.createElement("div", { className: prefixCls + '-preview' }, React.createElement("div", { className: prefixCls + '-preview-mask', onClick: this.reset }, React.createElement(_Icon2.default, { type: "delete" })), React.createElement("img", { src: selectedImage, width: size[0], height: size[1] })));
 	        }
 	        if (previewImage) {
-	            return React.createElement(_Cropper2.default, { circle: circle, size: size, prefixCls: prefixCls, file: previewImage, onChange: this.onChange, renderModal: renderModal, spin: getSpinContent() });
+	            return React.createElement(_Cropper2.default, { circle: circle, size: size, prefixCls: prefixCls, file: previewImage, onChange: this.onChange, renderModal: renderModal, spin: getSpinContent(), locale: locale });
 	        }
 	        return React.createElement(_Uploader2.default, { prefixCls: prefixCls, onSelectImage: this.selectImage }, this.props.children);
 	    };
@@ -325,7 +326,8 @@
 	CropViewer.defaultProps = {
 	    prefixCls: 'rc',
 	    size: [32, 32],
-	    circle: false
+	    circle: false,
+	    locale: 'en-US'
 	};
 	;
 	module.exports = exports['default'];
@@ -4586,7 +4588,7 @@
 	    Uploader.prototype.render = function render() {
 	        var prefixCls = this.props.prefixCls;
 	
-	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
+	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", accept: "image/*", style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
 	    };
 	
 	    return Uploader;
@@ -4823,6 +4825,10 @@
 	            canvas.setAttribute('width', viewport[0]);
 	            canvas.setAttribute('height', viewport[1]);
 	            var context = canvas.getContext('2d');
+	            if (!/image\/png/g.test(_this.props.file.type)) {
+	                context.fillStyle = "#fff";
+	                context.fillRect(0, 0, viewport[0], viewport[1]);
+	            }
 	            // if circle...
 	            if (_this.props.circle) {
 	                context.save();
@@ -4910,14 +4916,14 @@
 	        var draggerEvents = {
 	            onMouseDown: this.dragStart
 	        };
-	        var footer = [React.createElement(_Scaler2.default, { key: "scaler", prefixCls: prefixCls, onChange: this.scaleImage, value: scale, min: scaleRange[0], max: scaleRange[1] }), React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', key: "back", type: "ghost", onClick: this.handleCancel }, "Cancel"), React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-primary', key: "submit", type: "primary", onClick: this.handleOk }, "Submit")];
+	        var footer = [React.createElement(_Scaler2.default, { key: "scaler", prefixCls: prefixCls, onChange: this.scaleImage, value: scale, min: scaleRange[0], max: scaleRange[1] }), React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', key: "back", type: "ghost", onClick: this.handleCancel }, (0, _utils.getLocale)('cancel', this.props.locale)), React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-primary', key: "submit", type: "primary", onClick: this.handleOk }, (0, _utils.getLocale)('submit', this.props.locale))];
 	        var viewPortStyle = { width: viewport[0], height: viewport[1] };
 	        var previewClassName = circle ? 'radius' : null;
-	        var cropperElement = image ? React.createElement("div", { className: prefixCls + '-cropper-wrapper' }, React.createElement("div", { className: prefixCls + '-cropper' }, React.createElement("div", { className: prefixCls + '-thumbnail', style: viewPortStyle }, React.createElement("div", { className: "thumbnail-window", style: viewPortStyle }, React.createElement("img", { src: image.src, ref: "viewport", width: width, height: height, style: style })), React.createElement("img", __assign({}, draggerEvents, { ref: "dragger", src: image.src, width: width, height: height, style: style, className: prefixCls + '-background', draggable: false })), scale > scaleRange[0] ? React.createElement("div", { className: "candrag-notice-wrapper", ref: "dragNotice" }, React.createElement("span", { className: "candrag-notice" }, "拖动调整位置")) : null)), React.createElement("div", { className: prefixCls + '-thumbnail-preview' }, React.createElement("h4", null, "预览"), React.createElement("div", { className: "size-2x" }, React.createElement("canvas", { className: previewClassName, ref: "Canvas2x", width: viewport[0], height: viewport[1], style: { width: size[0] * 2, height: size[1] * 2 } }), React.createElement("p", null, "2x: ", size[0] * 2 + 'px * ' + size[1] * 2 + 'px')), React.createElement("div", { className: "size-1x" }, React.createElement("canvas", { className: previewClassName, ref: "Canvas1x", width: viewport[0], height: viewport[1], style: { width: size[0], height: size[1] } }), React.createElement("p", null, "1x: ", size[0] + 'px * ' + size[1] + 'px')))) : null;
+	        var cropperElement = image ? React.createElement("div", { className: prefixCls + '-cropper-wrapper' }, React.createElement("div", { className: prefixCls + '-cropper' }, React.createElement("div", { className: prefixCls + '-thumbnail', style: viewPortStyle }, React.createElement("div", { className: "thumbnail-window", style: viewPortStyle }, React.createElement("img", { src: image.src, ref: "viewport", width: width, height: height, style: style })), React.createElement("img", __assign({}, draggerEvents, { ref: "dragger", src: image.src, width: width, height: height, style: style, className: prefixCls + '-background', draggable: false })), scale > scaleRange[0] ? React.createElement("div", { className: "candrag-notice-wrapper", ref: "dragNotice" }, React.createElement("span", { className: "candrag-notice" }, (0, _utils.getLocale)('drag to crop', this.props.locale))) : null)), React.createElement("div", { className: prefixCls + '-thumbnail-preview' }, React.createElement("h4", null, (0, _utils.getLocale)('preview', this.props.locale)), React.createElement("div", { className: "size-2x" }, React.createElement("canvas", { className: previewClassName, ref: "Canvas2x", width: viewport[0], height: viewport[1], style: { width: size[0] * 2, height: size[1] * 2 } }), React.createElement("p", null, "2x: ", size[0] * 2 + 'px * ' + size[1] * 2 + 'px')), React.createElement("div", { className: "size-1x" }, React.createElement("canvas", { className: previewClassName, ref: "Canvas1x", width: viewport[0], height: viewport[1], style: { width: size[0], height: size[1] } }), React.createElement("p", null, "1x: ", size[0] + 'px * ' + size[1] + 'px')))) : null;
 	        if (image) {
 	            return React.createElement("div", null, spin, renderModal ? React.cloneElement(renderModal(), {
 	                visible: this.state.visible,
-	                title: '编辑图片',
+	                title: (0, _utils.getLocale)('edit picture', this.props.locale),
 	                width: 800,
 	                footer: footer,
 	                onCancel: this.handleCancel
@@ -4935,7 +4941,8 @@
 	    prefixCls: 'rc',
 	    size: [32, 32],
 	    circle: false,
-	    onChange: function onChange() {}
+	    onChange: function onChange() {},
+	    locale: 'en-US'
 	};
 	module.exports = exports['default'];
 
@@ -29376,7 +29383,7 @@
 
 /***/ },
 /* 326 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -29386,6 +29393,18 @@
 	exports.debounce = debounce;
 	exports.applyTransform = applyTransform;
 	exports.downScaleImage = downScaleImage;
+	exports.getLocale = getLocale;
+	
+	var _zh_CN = __webpack_require__(327);
+	
+	var _zh_CN2 = _interopRequireDefault(_zh_CN);
+	
+	var _en_US = __webpack_require__(328);
+	
+	var _en_US2 = _interopRequireDefault(_en_US);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	function debounce(func, wait) {
 	    var immediate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 	
@@ -29516,7 +29535,7 @@
 	                tBuffer[tIndex] += sR * w;
 	                tBuffer[tIndex + 1] += sG * w;
 	                tBuffer[tIndex + 2] += sB * w;
-	                // add weighted component for next (tX+1) px                
+	                // add weighted component for next (tX+1) px
 	                nw = nwx * scale;
 	                tBuffer[tIndex + 3] += sR * nw;
 	                tBuffer[tIndex + 4] += sG * nw;
@@ -29527,7 +29546,7 @@
 	                tBuffer[tIndex] += sR * w;
 	                tBuffer[tIndex + 1] += sG * w;
 	                tBuffer[tIndex + 2] += sB * w;
-	                // add weighted component for next (tY+1) px                
+	                // add weighted component for next (tY+1) px
 	                nw = nwy * scale;
 	                tBuffer[tIndex + 3 * tw] += sR * nw;
 	                tBuffer[tIndex + 3 * tw + 1] += sG * nw;
@@ -29554,7 +29573,7 @@
 	                tBuffer[tIndex + 3 * tw + 4] += sG * nw;
 	                tBuffer[tIndex + 3 * tw + 5] += sB * nw;
 	            }
-	        } // end for sx 
+	        } // end for sx
 	    } // end for sy
 	    // create result canvas
 	    var resCV = document.createElement('canvas');
@@ -29564,7 +29583,7 @@
 	    var imgRes = resCtx.getImageData(0, 0, tw, th);
 	    var tByteBuffer = imgRes.data;
 	    // convert float32 array into a UInt8Clamped Array
-	    var pxIndex = 0; //  
+	    var pxIndex = 0; //
 	    for (sIndex = 0, tIndex = 0; pxIndex < tw * th; sIndex += 3, tIndex += 4, pxIndex++) {
 	        tByteBuffer[tIndex] = Math.ceil(tBuffer[sIndex]);
 	        tByteBuffer[tIndex + 1] = Math.ceil(tBuffer[sIndex + 1]);
@@ -29575,11 +29594,55 @@
 	    resCtx.putImageData(imgRes, 0, 0);
 	    return resCV;
 	}
-	/* tslint:enable */
+	function getLocale(text, locale) {
+	    var dict = locale === 'en-US' ? _en_US2.default : _zh_CN2.default;
+	    if (dict.hasOwnProperty(text)) {
+	        return dict[text];
+	    }
+	    return text;
+	}
 
 /***/ },
-/* 327 */,
-/* 328 */,
+/* 327 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = {
+	    upload: '上传',
+	    submit: '提交',
+	    cancel: '取消',
+	    preview: '预览',
+	    'edit picture': '编辑图片',
+	    'drag to crop': '拖动以调整大小',
+	    'click to upload': '点击上传'
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 328 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = {
+	    upload: 'Upload',
+	    submit: 'Submit',
+	    cancel: 'Cancel',
+	    preview: 'Preview',
+	    'edit picture': 'Edit Picture',
+	    'drag to crop': 'Drag to Crop',
+	    'click to upload': 'Click to upload'
+	};
+	module.exports = exports['default'];
+
+/***/ },
 /* 329 */,
 /* 330 */,
 /* 331 */,
@@ -29592,7 +29655,9 @@
 /* 338 */,
 /* 339 */,
 /* 340 */,
-/* 341 */
+/* 341 */,
+/* 342 */,
+/* 343 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30117,8 +30182,6 @@
 	module.exports = KeyCode;
 
 /***/ },
-/* 342 */,
-/* 343 */,
 /* 344 */,
 /* 345 */,
 /* 346 */,
@@ -30313,7 +30376,9 @@
 /* 535 */,
 /* 536 */,
 /* 537 */,
-/* 538 */
+/* 538 */,
+/* 539 */,
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30326,7 +30391,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Dialog = __webpack_require__(539);
+	var _Dialog = __webpack_require__(541);
 	
 	var _Dialog2 = _interopRequireDefault(_Dialog);
 	
@@ -30392,7 +30457,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 539 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30409,7 +30474,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _KeyCode = __webpack_require__(341);
+	var _KeyCode = __webpack_require__(343);
 	
 	var _KeyCode2 = _interopRequireDefault(_KeyCode);
 	
@@ -30417,11 +30482,11 @@
 	
 	var _rcAnimate2 = _interopRequireDefault(_rcAnimate);
 	
-	var _LazyRenderBox = __webpack_require__(540);
+	var _LazyRenderBox = __webpack_require__(542);
 	
 	var _LazyRenderBox2 = _interopRequireDefault(_LazyRenderBox);
 	
-	var _getScrollBarSize = __webpack_require__(541);
+	var _getScrollBarSize = __webpack_require__(543);
 	
 	var _getScrollBarSize2 = _interopRequireDefault(_getScrollBarSize);
 	
@@ -30704,7 +30769,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 540 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30754,7 +30819,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 541 */
+/* 543 */
 /***/ function(module, exports) {
 
 	'use strict';
