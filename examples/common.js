@@ -306,7 +306,8 @@
 	            circle = _props.circle,
 	            getSpinContent = _props.getSpinContent,
 	            renderModal = _props.renderModal,
-	            locale = _props.locale;
+	            locale = _props.locale,
+	            accept = _props.accept;
 	
 	        if (selectedImage) {
 	            return React.createElement("div", { className: prefixCls + '-preview-wrapper' }, React.createElement("div", { className: prefixCls + '-preview' }, React.createElement("div", { className: prefixCls + '-preview-mask', onClick: this.reset }, React.createElement(_Icon2.default, { type: "delete" })), React.createElement("img", { src: selectedImage, width: size[0], height: size[1] })));
@@ -314,7 +315,7 @@
 	        if (previewImage) {
 	            return React.createElement(_Cropper2.default, { circle: circle, size: size, prefixCls: prefixCls, file: previewImage, onChange: this.onChange, renderModal: renderModal, spin: getSpinContent(), locale: locale });
 	        }
-	        return React.createElement(_Uploader2.default, { prefixCls: prefixCls, onSelectImage: this.selectImage }, this.props.children);
+	        return React.createElement(_Uploader2.default, { prefixCls: prefixCls, onSelectImage: this.selectImage, accept: accept }, this.props.children);
 	    };
 	
 	    return CropViewer;
@@ -327,7 +328,8 @@
 	    prefixCls: 'rc',
 	    size: [32, 32],
 	    circle: false,
-	    locale: 'en-US'
+	    locale: 'en-US',
+	    accept: ''
 	};
 	;
 	module.exports = exports['default'];
@@ -4586,9 +4588,11 @@
 	    }
 	
 	    Uploader.prototype.render = function render() {
-	        var prefixCls = this.props.prefixCls;
+	        var _props = this.props,
+	            prefixCls = _props.prefixCls,
+	            accept = _props.accept;
 	
-	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", accept: "image/*", style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
+	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", accept: accept, style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
 	    };
 	
 	    return Uploader;
