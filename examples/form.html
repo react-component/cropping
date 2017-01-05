@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>form.js - example - rc-cropping@0.1.10</title>
+  <title>form.js - example - rc-cropping@0.1.11</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -263,7 +263,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-cropping@0.1.10</h1>
+      <h1>rc-cropping@0.1.11</h1>
 
       <p>CropViewer ui component for react</p>
     </div>
@@ -312,6 +312,7 @@ const NormalLoginForm = Form.create()(React.createClass({
               getSpinContent={() =&gt; &lt;Spin /&gt; }
               renderModal={() =&gt; &lt;Modal /&gt;}
               fileType="image/jpeg"
+              accept="image/gif,image/jpeg,image/png,image/bmp,image/x-png,image/pjpeg"
             &gt;请上传文件&lt;/CropViewer&gt;
           )}
         &lt;/FormItem&gt;

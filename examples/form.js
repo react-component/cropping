@@ -80,7 +80,8 @@ webpackJsonp([0],[
 	            renderModal: function renderModal() {
 	              return _react2.default.createElement(_antd.Modal, null);
 	            },
-	            fileType: 'image/jpeg'
+	            fileType: 'image/jpeg',
+	            accept: 'image/gif,image/jpeg,image/png,image/bmp,image/x-png,image/pjpeg'
 	          },
 	          '\u8BF7\u4E0A\u4F20\u6587\u4EF6'
 	        ))
