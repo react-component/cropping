@@ -329,7 +329,7 @@
 	    size: [32, 32],
 	    circle: false,
 	    locale: 'en-US',
-	    accept: ''
+	    accept: null
 	};
 	;
 	module.exports = exports['default'];
@@ -4582,10 +4582,9 @@
 	        };
 	        _this.selectFile = function (ev) {
 	            var file = _this.refs.file.files[0];
-	            // if (/image\/*/g.test(file.type)) {
-	            //   this.props.onSelectImage(file);
-	            // } else {
-	            // }
+	            if (/image\/*/g.test(file.type)) {
+	                _this.props.onSelectImage(file);
+	            }
 	        };
 	        return _this;
 	    }
@@ -4595,7 +4594,7 @@
 	            prefixCls = _props.prefixCls,
 	            accept = _props.accept;
 	
-	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
+	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", accept: accept, style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
 	    };
 	
 	    return Uploader;
@@ -4813,9 +4812,7 @@
 	        };
 	        _this.handleCancel = function () {
 	            _this.props.onChange(null);
-	            _this.setState({
-	                visible: false
-	            });
+	            _this.hideModal();
 	        };
 	        _this.handleOk = function () {
 	            var _this$state2 = _this.state,
@@ -4854,17 +4851,19 @@
 	            if (canvas.toBlob) {
 	                canvas.toBlob(function (blob) {
 	                    _this.props.onChange(blob);
-	                    _this.setState({
-	                        visible: false
-	                    });
+	                    _this.hideModal();
 	                }, _this.props.file.type);
 	            } else {
 	                var dataUrl = canvas.toDataURL(_this.props.file.type);
 	                _this.props.onChange((0, _canvasToBlob2.default)(dataUrl));
-	                _this.setState({
-	                    visible: false
-	                });
+	                _this.hideModal();
 	            }
+	        };
+	        _this.hideModal = function () {
+	            _this.setState({
+	                visible: false
+	            });
+	            document.body.style.overflow = '';
 	        };
 	        var size = props.size;
 	
