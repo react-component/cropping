@@ -4573,12 +4573,13 @@
 	
 	        var _this = _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
 	
-	        _this.onClick = function () {
+	        _this.onClick = function (ev) {
 	            var el = _this.refs.file;
 	            if (!el) {
 	                return;
 	            }
 	            el.click();
+	            ev.preventDefault();
 	        };
 	        _this.selectFile = function (ev) {
 	            var file = _this.refs.file.files[0];
