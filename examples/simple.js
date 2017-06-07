@@ -1,18 +1,18 @@
 webpackJsonp([2],{
 
 /***/ 0:
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(797);
+	module.exports = __webpack_require__(876);
 
 
-/***/ },
+/***/ }),
 
-/***/ 796:
+/***/ 875:
 3,
 
-/***/ 797:
-/***/ function(module, exports, __webpack_require__) {
+/***/ 876:
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -22,17 +22,17 @@ webpackJsonp([2],{
 	
 	var _rcCropping2 = _interopRequireDefault(_rcCropping);
 	
-	var _rcDialog = __webpack_require__(540);
+	var _rcDialog = __webpack_require__(570);
 	
 	var _rcDialog2 = _interopRequireDefault(_rcDialog);
 	
-	__webpack_require__(796);
+	__webpack_require__(875);
 	
 	var _react = __webpack_require__(7);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(143);
+	var _reactDom = __webpack_require__(145);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -55,7 +55,7 @@ webpackJsonp([2],{
 	  locale: 'zh-CN'
 	}), document.getElementById('__react-content'));
 
-/***/ }
+/***/ })
 
 });
 //# sourceMappingURL=simple.js.map

@@ -1,15 +1,15 @@
 webpackJsonp([1],{
 
 /***/ 0:
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(795);
+	module.exports = __webpack_require__(874);
 
 
-/***/ },
+/***/ }),
 
-/***/ 795:
-/***/ function(module, exports, __webpack_require__) {
+/***/ 874:
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -19,17 +19,17 @@ webpackJsonp([1],{
 	
 	var _rcCropping2 = _interopRequireDefault(_rcCropping);
 	
-	var _rcDialog = __webpack_require__(540);
+	var _rcDialog = __webpack_require__(570);
 	
 	var _rcDialog2 = _interopRequireDefault(_rcDialog);
 	
-	__webpack_require__(796);
+	__webpack_require__(875);
 	
 	var _react = __webpack_require__(7);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(143);
+	var _reactDom = __webpack_require__(145);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -100,9 +100,9 @@ webpackJsonp([1],{
 	
 	_reactDom2.default.render(_react2.default.createElement(Test, null), document.getElementById('__react-content'));
 
-/***/ },
+/***/ }),
 
-/***/ 796:
+/***/ 875:
 3
 
 });
