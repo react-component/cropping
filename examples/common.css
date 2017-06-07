@@ -191,9 +191,6 @@
   padding: 6px 12px;
 }
 .rc-btn {
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
   display: inline-block;
   margin-bottom: 0;
   font-weight: 500;

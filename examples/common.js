@@ -4579,7 +4579,6 @@
 	                return;
 	            }
 	            el.click();
-	            ev.preventDefault();
 	        };
 	        _this.selectFile = function (ev) {
 	            var file = _this.refs.file.files[0];
@@ -4595,7 +4594,7 @@
 	            prefixCls = _props.prefixCls,
 	            accept = _props.accept;
 	
-	        return React.createElement("button", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", accept: accept, style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
+	        return React.createElement("span", { className: prefixCls + '-btn ' + prefixCls + '-btn-ghost', type: "ghost", onClick: this.onClick }, React.createElement("input", { type: "file", ref: "file", accept: accept, style: { display: 'none' }, onChange: this.selectFile }), this.props.children || React.createElement("span", null, React.createElement(_Icon2.default, { type: "upload" }), " Click to Upload "));
 	    };
 	
 	    return Uploader;
