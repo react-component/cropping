@@ -266,6 +266,10 @@
 	                    self.selectImageCallback = null;
 	                    resolve(file);
 	                };
+	                self.cancelSelectImageCallback = function () {
+	                    self.cancelSelectImageCallback = null;
+	                    reject();
+	                };
 	            });
 	        };
 	        _this.onChange = function (fileblob) {
@@ -273,8 +277,11 @@
 	            if (_this.props.onChange) {
 	                _this.props.onChange(file);
 	            }
-	            if (_this.selectImageCallback) {
+	            if (file && _this.selectImageCallback) {
 	                _this.selectImageCallback(file);
+	            }
+	            if (!fileblob) {
+	                _this.cancelSelectImageCallback();
 	            }
 	            if (!_this.props.value) {
 	                if (fileblob) {
