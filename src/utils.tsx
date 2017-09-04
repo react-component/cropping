@@ -1,5 +1,5 @@
-import zhCN from '../locale/zh_CN';
-import enUS from '../locale/en_US';
+import zhCN from './locale/zh_CN';
+import enUS from './locale/en_US';
 
 export function debounce(func, wait, immediate: boolean = false) {
   let timeout;

@@ -9,6 +9,7 @@ export interface FileMeta {
 export interface UploaderProps {
   onSelectImage: (file: File) => void;
   prefixCls?: string;
+  accept?: string;
 };
 
 export default class Uploader extends React.Component<UploaderProps, any> {
@@ -17,7 +18,7 @@ export default class Uploader extends React.Component<UploaderProps, any> {
     file: HTMLInputElement;
   };
 
-  onClick = () => {
+  onClick = (ev) => {
     const el = this.refs.file;
     if (!el) {
       return;
@@ -27,13 +28,15 @@ export default class Uploader extends React.Component<UploaderProps, any> {
 
   selectFile = (ev) => {
     const file = this.refs.file.files[0];
-    this.props.onSelectImage(file);
+    if (/image\/*/g.test(file.type)) {
+      this.props.onSelectImage(file);
+    }
   }
   render() {
-    const { prefixCls } = this.props;
-    return (<button className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} type="ghost" onClick={this.onClick}>
-      <input type="file" ref="file" accept="image/*" style={{display: 'none'}} onChange={this.selectFile}/>
+    const { prefixCls, accept } = this.props;
+    return (<span className={`${prefixCls}-btn ${prefixCls}-btn-ghost`} type="ghost" onClick={this.onClick}>
+      <input type="file" ref="file" accept={accept} style={{display: 'none'}} onChange={this.selectFile}/>
       {this.props.children || <span><Icon type="upload" /> Click to Upload </span>}
-    </button>);
+    </span>);
   }
 }

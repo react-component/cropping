@@ -41,6 +41,7 @@ const NormalLoginForm = Form.create()(React.createClass({
               getSpinContent={() => <Spin /> }
               renderModal={() => <Modal />}
               fileType="image/jpeg"
+              accept="image/gif,image/jpeg,image/png,image/bmp,image/x-png,image/pjpeg"
             >请上传文件</CropViewer>
           )}
         </FormItem>

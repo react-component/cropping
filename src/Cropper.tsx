@@ -55,6 +55,7 @@ export interface CropperProps {
   spin?: React.ComponentElement<any, any>;
   renderModal?: (args?: any) => React.ComponentElement<DialogProps, any>;
   locale?: String;
+  thumbnailSizes: Array<Array<number>>;
 }
 
 export default class Cropper extends React.Component<CropperProps, any> {
@@ -254,9 +255,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
 
   handleCancel = () => {
     this.props.onChange(null);
-    this.setState({
-      visible: false,
-    });
+    this.hideModal();
   }
   handleOk = () => {
     const { image, width, height, scale, viewport } = this.state;
@@ -300,20 +299,33 @@ export default class Cropper extends React.Component<CropperProps, any> {
     if (canvas.toBlob) {
       canvas.toBlob( blob => {
         this.props.onChange(blob);
-        this.setState({
-          visible: false,
-        });
+        this.hideModal();
       }, this.props.file.type);
     } else {
       const dataUrl = canvas.toDataURL(this.props.file.type);
       this.props.onChange(dataURLtoBlob(dataUrl));
-      this.setState({
-        visible: false,
-      });
+      this.hideModal();
     }
   }
+  hideModal = () => {
+    this.setState({
+      visible: false,
+    });
+    document.body.style.overflow = '';
+  }
+  getThumbnailSize = (index): Array<number> => {
+    const { size, thumbnailSizes } = this.props;
+    if (thumbnailSizes && thumbnailSizes.hasOwnProperty(index)) {
+      return thumbnailSizes[index];
+    }
+    
+    if (index === 0) {
+      return [ size[0] * 2, size[1] * 2];
+    }
+    return [ size[0], size[1] ];
+  }
   render() {
-    const { prefixCls, size, circle, spin, renderModal } = this.props;
+    const { prefixCls, size, circle, spin, renderModal, thumbnailSizes } = this.props;
     const { image, width, height, scale, scaleRange, viewport } = this.state;
     const style = { left: 0, top: 0 };
     const draggerEvents = {
@@ -378,9 +390,9 @@ export default class Cropper extends React.Component<CropperProps, any> {
             ref="Canvas2x"
             width={viewport[0]}
             height={viewport[1]}
-            style={{width: size[0] * 2, height: size[1] * 2}}
+            style={{width: this.getThumbnailSize(0)[0], height: this.getThumbnailSize(0)[1]}}
           ></canvas>
-          <p>2x: {`${size[0] * 2}px * ${size[1] * 2}px`}</p>
+          <p>2x: {`${this.getThumbnailSize(0)[0]}px * ${this.getThumbnailSize(0)[1]}px`}</p>
         </div>
         <div className="size-1x">
           <canvas
@@ -388,9 +400,9 @@ export default class Cropper extends React.Component<CropperProps, any> {
             ref="Canvas1x"
             width={viewport[0]}
             height={viewport[1]}
-            style={{width: size[0], height: size[1]}}
+            style={{width: this.getThumbnailSize(1)[0], height: this.getThumbnailSize(1)[1]}}
           ></canvas>
-          <p>1x: {`${size[0]}px * ${size[1]}px`}</p>
+          <p>1x: {`${this.getThumbnailSize(1)[0]}px * ${this.getThumbnailSize(1)[1]}px`}</p>
         </div>
       </div>
   </div>) : null;
