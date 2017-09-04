@@ -232,11 +232,14 @@
 	        var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 	
 	        _this.loadSelectedImage = function (blobOrString) {
+	            var resetPreviewAfterSelectImage = _this.props.resetPreviewAfterSelectImage;
+	
 	            if (typeof blobOrString === 'string') {
 	                var image = new Image();
 	                image.onload = function () {
 	                    _this.setState({
-	                        selectedImage: blobOrString
+	                        selectedImage: blobOrString,
+	                        previewImage: resetPreviewAfterSelectImage ? null : _this.state.previewImage
 	                    });
 	                };
 	                image.src = blobOrString;
@@ -245,11 +248,14 @@
 	            }
 	        };
 	        _this.readBlob = function (blob) {
+	            var resetPreviewAfterSelectImage = _this.props.resetPreviewAfterSelectImage;
+	
 	            var reader = new FileReader();
 	            reader.readAsDataURL(blob);
 	            reader.onload = function () {
 	                _this.setState({
-	                    selectedImage: reader.result
+	                    selectedImage: reader.result,
+	                    previewImage: resetPreviewAfterSelectImage ? null : _this.state.previewImage
 	                });
 	            };
 	        };
@@ -308,10 +314,12 @@
 	        if (nextProps.value) {
 	            this.loadSelectedImage(nextProps.value);
 	        } else {
-	            this.setState({
-	                previewImage: null,
-	                selectedImage: null
-	            });
+	            if (nextProps.value !== this.props.value) {
+	                this.setState({
+	                    previewImage: null,
+	                    selectedImage: null
+	                });
+	            }
 	        }
 	    };
 	
@@ -327,9 +335,10 @@
 	            renderModal = _props.renderModal,
 	            locale = _props.locale,
 	            accept = _props.accept,
-	            thumbnailSizes = _props.thumbnailSizes;
+	            thumbnailSizes = _props.thumbnailSizes,
+	            showSelected = _props.showSelected;
 	
-	        if (selectedImage) {
+	        if (showSelected && selectedImage) {
 	            return React.createElement("div", { className: prefixCls + '-preview-wrapper' }, React.createElement("div", { className: prefixCls + '-preview' }, React.createElement("div", { className: prefixCls + '-preview-mask', onClick: this.reset }, React.createElement(_Icon2.default, { type: "delete" })), React.createElement("img", { src: selectedImage, width: size[0], height: size[1] })));
 	        }
 	        if (previewImage) {
@@ -349,7 +358,9 @@
 	    size: [32, 32],
 	    circle: false,
 	    locale: 'en-US',
-	    accept: null
+	    accept: null,
+	    showSelected: true,
+	    resetPreviewAfterSelectImage: false
 	};
 	;
 	module.exports = exports['default'];
