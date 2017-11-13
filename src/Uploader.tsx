@@ -1,18 +1,18 @@
 import * as React from 'react';
 import Icon from './Icon';
 
-export interface FileMeta {
+export interface IFileMeta {
   name: string;
   type: string;
 };
 
-export interface UploaderProps {
+export interface IUploaderProps {
   onSelectImage: (file: File) => void;
   prefixCls?: string;
   accept?: string;
 };
 
-export default class Uploader extends React.Component<UploaderProps, any> {
+export default class Uploader extends React.Component<IUploaderProps, any> {
 
   refs: {
     file: HTMLInputElement;

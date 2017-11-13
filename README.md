@@ -114,6 +114,12 @@ ReactDOM.render(<CropViewer
           <td>false</td>
           <td> Croppe circle image or not. If true, you'll get a circle picture. Notice: transparent background *ONLY* supported in png file, croppe jpg file will get white background. </td>
         </tr>
+        <tr>
+          <td>resizer</td>
+          <td>function</td>
+          <td>null</td>
+          <td> Cropper support custom image resize function, e.g., you can use [pica](https://github.com/nodeca/pica) to down scale your picture more perfectly </td>
+        </tr>
     </tbody>
 </table>
 

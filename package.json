@@ -1,7 +1,7 @@
 {
   "name": "rc-cropping",
-  "version": "0.2.0",
-  "description": "CropViewer ui component for react",
+  "version": "1.0.0",
+  "description": "CropViewer component for react",
   "keywords": [
     "react",
     "react-component",
@@ -34,28 +34,49 @@
     "lint": "rc-tools run lint",
     "karma": "rc-tools run karma",
     "saucelabs": "rc-tools run saucelabs",
-    "test": "rc-tools run test",
-    "chrome-test": "rc-tools run chrome-test",
-    "coverage": "rc-tools run coverage"
+    "test": "jest --config .jest.js",
+    "coverage": "jest --config .jest.js --coverage"
   },
   "dependencies": {
-    "rc-slider": "^5.2.1"
+    "rc-slider": "^8.4.0"
   },
   "devDependencies": {
+    "babel-jest": "^19.0.0",
+    "typescript": "~2.6.0",
+    "typescript-babel-jest": "^1.0.2",
     "@types/classnames": "^0.0.31",
     "@types/react": "^0.14.44",
     "antd": "^2.3.2",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.2",
+    "enzyme-to-json": "^3.1.4",
     "expect.js": "0.3.x",
+    "jest": "^21.2.1",
+    "pica": "^4.0.1",
     "pre-commit": "1.x",
+    "prop-types": "^15.6.0",
     "rc-dialog": "^6.5.0",
     "rc-form": "^1.0.1",
-    "rc-tools": "5.x",
+    "rc-tools": "6.2.2",
     "rc-upload": "^2.3.7",
-    "react": "15.x",
-    "react-addons-test-utils": "15.x",
-    "react-dom": "15.x"
+    "react": "16.0.0",
+    "react-dom": "16.0.0"
   },
   "pre-commit": [
     "lint"
-  ]
+  ],
+  "jest": {
+    "collectCoverageFrom": [
+      "src/*"
+    ],
+    "setupFiles": [
+      "./tests/setup.js"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "transform": {
+      "\\.jsx?$": "./node_modules/rc-tools/scripts/jestPreprocessor.js"
+    }
+  }
 }
