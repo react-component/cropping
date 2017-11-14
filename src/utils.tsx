@@ -1,6 +1,7 @@
 import zhCN from './locale/zh_CN';
 import enUS from './locale/en_US';
 
+export type Scaler = (from: HTMLCanvasElement, to: HTMLCanvasElement) => Promise<HTMLCanvasElement>;
 export function debounce(func, wait, immediate: boolean = false) {
   let timeout;
   return function debounceFunc() {
@@ -51,20 +52,35 @@ export function applyTransform(element, transformString: string) {
 }
 
 // pixel-perfect downsampling
-export function downScaleImage(img, scale) {
-    const imgCV = document.createElement('canvas');
-    imgCV.width = img.width;
-    imgCV.height = img.height;
-    const imgCtx = imgCV.getContext('2d');
+export function downScaleImage(img, scale, scaler: Scaler = defaultDownScaler): Promise<HTMLCanvasElement> {
+    const sourceCanvas = document.createElement('canvas');
+    sourceCanvas.width = img.width;
+    sourceCanvas.height = img.height;
+    const imgCtx = sourceCanvas.getContext('2d');
     imgCtx.drawImage(img, 0, 0);
     if (scale >= 1) {
-      return imgCV;
+      return Promise.resolve(sourceCanvas);
     }
-    return downScaleCanvas(imgCV, scale);
+
+    const targetCanvas = document.createElement('canvas');
+    const tw = Math.floor(img.width * scale); // target image width
+    const th = Math.floor(img.height * scale); // target image height
+    targetCanvas.width = tw;
+    targetCanvas.height = th;
+
+    return scaler(sourceCanvas, targetCanvas);
+}
+
+function defaultDownScaler(from, to) {
+    return new Promise(resolve => {
+        resolve(downScaleCanvas(from, to));
+    });
 }
 
 /* tslint:disable */
-function downScaleCanvas(cv, scale) {
+
+function downScaleCanvas(cv, resCV) {
+    const scale = resCV.width / cv.width;
     if (!(scale < 1) || !(scale > 0)) throw ('scale must be a positive number <1 ');
     var sqScale = scale * scale; // square scale = area of source pixel within target
     var sw = cv.width; // source image width
@@ -170,9 +186,6 @@ function downScaleCanvas(cv, scale) {
     } // end for sy
 
     // create result canvas
-    var resCV = document.createElement('canvas');
-    resCV.width = tw;
-    resCV.height = th;
     var resCtx = resCV.getContext('2d');
     var imgRes = resCtx.getImageData(0, 0, tw, th);
     var tByteBuffer = imgRes.data;

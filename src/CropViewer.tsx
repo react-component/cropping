@@ -3,27 +3,28 @@ import Icon from './Icon';
 import Uploader from './Uploader';
 import Cropper from './Cropper';
 
-export interface CropViewerState {
+export interface ICropViewerState {
   previewImage?: File;
   selectedImage?: string;
 }
 
-export interface CropProps {
+export interface ICropProps {
   prefixCls: string;
   value: Blob;
   onChange: (blob: Blob) => void;
-  size?: Array<number>;
+  size?: number[];
   circle?: boolean;
   renderModal: (args?: any) => React.ComponentElement<any, any>;
   getSpinContent: () => React.ComponentElement<any, any>;
   locale?: String;
-  accept?: String;
-  thumbnailSizes?: Array<Array<number>>;
+  accept?: string;
+  thumbnailSizes?: number[][];
   showSelected: boolean;
   resetPreviewAfterSelectImage: boolean;
+  resizer?: (from: HTMLCanvasElement, to: HTMLCanvasElement) => Promise<HTMLCanvasElement>;
 }
 
-export default class CropViewer extends React.Component<CropProps, CropViewerState> {
+export default class CropViewer extends React.Component<ICropProps, ICropViewerState> {
   static Cropper = Cropper;
   static defaultProps = {
     prefixCls: 'rc',
@@ -45,6 +46,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
     if (props.value) {
       this.loadSelectedImage(props.value);
     }
+    this.cancelSelectImageCallback = () => {};
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.value) {
@@ -89,24 +91,30 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
     this.onChange(null);
   }
   selectImage = (file) => {
-    const self = this;
     this.setState({
       previewImage: file,
     });
 
     return new Promise((resolve, reject) => {
-      self.selectImageCallback = file => {
-        self.selectImageCallback = null;
-        resolve(file);
-      }
-      self.cancelSelectImageCallback = () => {
-        self.cancelSelectImageCallback = null;
+      this.selectImageCallback = selectedImage => {
+        this.selectImageCallback = null;
+        resolve(selectedImage);
+      };
+      this.cancelSelectImageCallback = () => {
+        this.cancelSelectImageCallback = null;
         reject();
-      }
+      };
     });
   }
   onChange = (fileblob: Blob) => {
-    const file = fileblob ? new File([fileblob], this.state.previewImage.name, { type: this.state.previewImage.type }) : null;
+    const file = fileblob ?
+      new File(
+        [fileblob],
+        this.state.previewImage.name,
+        { type: this.state.previewImage.type },
+      )
+      : null;
+
     if (this.props.onChange) {
       this.props.onChange(file);
     }
@@ -129,7 +137,19 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
   }
   render() {
     const { previewImage, selectedImage } = this.state;
-    const { prefixCls, size, circle, getSpinContent, renderModal, locale, accept, thumbnailSizes, showSelected } = this.props;
+    const {
+      prefixCls,
+      size,
+      circle,
+      getSpinContent,
+      renderModal,
+      locale,
+      accept,
+      thumbnailSizes,
+      showSelected,
+      resizer,
+    } = this.props;
+
     if (showSelected && selectedImage) {
       return <div className={`${prefixCls}-preview-wrapper`}>
         <div className={`${prefixCls}-preview`}>
@@ -151,6 +171,7 @@ export default class CropViewer extends React.Component<CropProps, CropViewerSta
         thumbnailSizes={thumbnailSizes}
         spin={getSpinContent()}
         locale={locale}
+        resizer={resizer}
       />;
     }
     return <Uploader

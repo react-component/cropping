@@ -24,7 +24,7 @@ let left = 0;
 let top = 0;
 let dragging = false;
 
-function limit(value: number, limitArray: Array<number>): number {
+function limit(value: number, limitArray: number[]): number {
   const min = Math.min(limitArray[0], limitArray[1]);
   const max = Math.max(limitArray[0], limitArray[1]);
   if (value < min) {
@@ -36,7 +36,7 @@ function limit(value: number, limitArray: Array<number>): number {
   return value;
 }
 
-export interface DialogProps {
+export interface IDialogProps {
   title: any;
   defaultProps: any;
   footer: any;
@@ -46,19 +46,20 @@ export interface DialogProps {
   onOk?: (args?: any) => any;
 }
 
-export interface CropperProps {
+export interface ICropperProps {
   file: File;
-  size: Array<number>;
+  size: number[];
   onChange: (args: any) => void;
   prefixCls?: string;
   circle?: boolean;
   spin?: React.ComponentElement<any, any>;
-  renderModal?: (args?: any) => React.ComponentElement<DialogProps, any>;
+  renderModal?: (args?: any) => React.ComponentElement<IDialogProps, any>;
   locale?: String;
-  thumbnailSizes: Array<Array<number>>;
+  thumbnailSizes: number[][];
+  resizer?: (from: HTMLCanvasElement, to: HTMLCanvasElement) => Promise<HTMLCanvasElement>;
 }
 
-export default class Cropper extends React.Component<CropperProps, any> {
+export default class Cropper extends React.Component<ICropperProps, any> {
   static defaultProps = {
     prefixCls: 'rc',
     size: [32, 32],
@@ -67,19 +68,19 @@ export default class Cropper extends React.Component<CropperProps, any> {
     locale: 'en-US',
   };
 
-  refs: {
-    viewport: HTMLElement,
-    dragger: HTMLElement,
-    dragNotice: HTMLElement,
-    Canvas2x: HTMLCanvasElement,
-    Canvas1x: HTMLCanvasElement,
+  refNodes: {
+    viewport?: HTMLElement,
+    dragger?: HTMLElement,
+    dragNotice?: HTMLElement,
+    Canvas2x?: HTMLCanvasElement,
+    Canvas1x?: HTMLCanvasElement,
   };
 
   updateThumbnail = debounce(() => {
     const { image, width, height } = this.state;
     // const scaledImage = downScaleImage(image, 0.2);
-    this.refs.Canvas2x.getContext('2d').drawImage(image, left, top, width, height);
-    this.refs.Canvas1x.getContext('2d').drawImage(image, left, top, width, height);
+    this.refNodes.Canvas2x.getContext('2d').drawImage(image, left, top, width, height);
+    this.refNodes.Canvas1x.getContext('2d').drawImage(image, left, top, width, height);
   }, 100);
 
   constructor(props) {
@@ -109,6 +110,8 @@ export default class Cropper extends React.Component<CropperProps, any> {
       scale: 1,
       visible: false,
     };
+
+    this.refNodes = {};
   }
 
   componentDidMount() {
@@ -164,11 +167,11 @@ export default class Cropper extends React.Component<CropperProps, any> {
 
     left = limit(
       (this.state.viewport[0] - imageState.width) / 2 + Δleft,
-      [this.state.viewport[0] - imageState.width, 0]
+      [this.state.viewport[0] - imageState.width, 0],
     );
     top = limit(
       (this.state.viewport[1] - imageState.height) / 2 + Δtop,
-      [this.state.viewport[1] - imageState.height, 0]
+      [this.state.viewport[1] - imageState.height, 0],
     );
     this.applyPositions();
   }
@@ -214,8 +217,12 @@ export default class Cropper extends React.Component<CropperProps, any> {
   }
 
   applyPositions = () => {
-    applyTransform(this.refs.viewport, `translate3d(${left}px,${top}px,0)`);
-    applyTransform(this.refs.dragger, `translate3d(${left}px,${top}px,0)`);
+    if (this.refNodes.viewport) {
+      applyTransform(this.refNodes.viewport, `translate3d(${left}px,${top}px,0)`);
+    }
+    if (this.refNodes.dragger) {
+      applyTransform(this.refNodes.dragger, `translate3d(${left}px,${top}px,0)`);
+    }
   }
 
   onMouseDown = () => {
@@ -243,8 +250,8 @@ export default class Cropper extends React.Component<CropperProps, any> {
       this.applyPositions();
       this.updateThumbnail();
       // 拖动后，不再提示可拖动
-      if (this.refs.dragNotice) {
-        this.refs.dragNotice.style.display = 'none';
+      if (this.refNodes.dragNotice) {
+        this.refNodes.dragNotice.style.display = 'none';
       }
     }
   }
@@ -259,53 +266,55 @@ export default class Cropper extends React.Component<CropperProps, any> {
   }
   handleOk = () => {
     const { image, width, height, scale, viewport } = this.state;
-    const scaledImage = downScaleImage(image, scale);
-    const canvas = document.createElement('canvas');
-    canvas.style.width = `${viewport[0]}px`;
-    canvas.style.height = `${viewport[1]}px`;
-    canvas.setAttribute('width', viewport[0]);
-    canvas.setAttribute('height', viewport[1]);
-    const context = canvas.getContext('2d');
+    const { resizer } = this.props;
+    downScaleImage(image, scale, resizer).then(scaledImage => {
+      const canvas = document.createElement('canvas');
+      canvas.style.width = `${viewport[0]}px`;
+      canvas.style.height = `${viewport[1]}px`;
+      canvas.setAttribute('width', viewport[0]);
+      canvas.setAttribute('height', viewport[1]);
+      const context = canvas.getContext('2d');
 
-    if (!/image\/png/g.test(this.props.file.type)) {
-      context.fillStyle = "#fff";
-      context.fillRect(0, 0, viewport[0], viewport[1]);
-    }
+      if (!/image\/png/g.test(this.props.file.type)) {
+        context.fillStyle = '#fff';
+        context.fillRect(0, 0, viewport[0], viewport[1]);
+      }
 
-    // if circle...
-    if (this.props.circle) {
-      context.save();
-      context.beginPath();
-      context.arc(
-        viewport[0] / 2,
-        viewport[1] / 2,
-        Math.min(viewport[0] / 2, viewport[1] / 2),
-        0,
-        Math.PI * 2,
-        true
-      );
-      context.closePath();
-      context.clip();
-    }
+      // if circle...
+      if (this.props.circle) {
+        context.save();
+        context.beginPath();
+        context.arc(
+          viewport[0] / 2,
+          viewport[1] / 2,
+          Math.min(viewport[0] / 2, viewport[1] / 2),
+          0,
+          Math.PI * 2,
+          true,
+        );
+        context.closePath();
+        context.clip();
+      }
 
-    context.drawImage(scaledImage, left, top, width, height);
+      context.drawImage(scaledImage, left, top, width, height);
 
-    if (this.props.circle) {
-      context.beginPath();
-      context.arc(0, 0, 2, 0, Math.PI, true);
-      context.closePath();
-      context.restore();
-    }
-    if (canvas.toBlob) {
-      canvas.toBlob( blob => {
-        this.props.onChange(blob);
+      if (this.props.circle) {
+        context.beginPath();
+        context.arc(0, 0, 2, 0, Math.PI, true);
+        context.closePath();
+        context.restore();
+      }
+      if (canvas.toBlob) {
+        canvas.toBlob( blob => {
+          this.props.onChange(blob);
+          this.hideModal();
+        }, this.props.file.type);
+      } else {
+        const dataUrl = canvas.toDataURL(this.props.file.type);
+        this.props.onChange(dataURLtoBlob(dataUrl));
         this.hideModal();
-      }, this.props.file.type);
-    } else {
-      const dataUrl = canvas.toDataURL(this.props.file.type);
-      this.props.onChange(dataURLtoBlob(dataUrl));
-      this.hideModal();
-    }
+      }
+    });
   }
   hideModal = () => {
     this.setState({
@@ -313,17 +322,22 @@ export default class Cropper extends React.Component<CropperProps, any> {
     });
     document.body.style.overflow = '';
   }
-  getThumbnailSize = (index): Array<number> => {
+  getThumbnailSize = (index): number[] => {
     const { size, thumbnailSizes } = this.props;
     if (thumbnailSizes && thumbnailSizes.hasOwnProperty(index)) {
       return thumbnailSizes[index];
     }
-    
+
     if (index === 0) {
       return [ size[0] * 2, size[1] * 2];
     }
     return [ size[0], size[1] ];
   }
+
+  applyRef(refName: string, ele: Element) {
+    this.refNodes[refName] = ele;
+  }
+
   render() {
     const { prefixCls, size, circle, spin, renderModal, thumbnailSizes } = this.props;
     const { image, width, height, scale, scaleRange, viewport } = this.state;
@@ -365,11 +379,17 @@ export default class Cropper extends React.Component<CropperProps, any> {
       <div className={`${prefixCls}-cropper`}>
         <div className={`${prefixCls}-thumbnail`} style={viewPortStyle}>
           <div className="thumbnail-window" style={viewPortStyle}>
-            <img src={image.src} ref="viewport" width={width} height={height} style={style}/>
+            <img
+              src={image.src}
+              ref={this.applyRef.bind(this, 'viewport')}
+              width={width}
+              height={height}
+              style={style}
+            />
           </div>
           <img
             {...draggerEvents}
-            ref="dragger"
+            ref={this.applyRef.bind(this, 'dragger')}
             src={image.src}
             width={width}
             height={height}
@@ -387,7 +407,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
         <div className="size-2x">
           <canvas
             className={previewClassName}
-            ref="Canvas2x"
+            ref={this.applyRef.bind(this, 'Canvas2x')}
             width={viewport[0]}
             height={viewport[1]}
             style={{width: this.getThumbnailSize(0)[0], height: this.getThumbnailSize(0)[1]}}
@@ -397,7 +417,7 @@ export default class Cropper extends React.Component<CropperProps, any> {
         <div className="size-1x">
           <canvas
             className={previewClassName}
-            ref="Canvas1x"
+            ref={this.applyRef.bind(this, 'Canvas1x')}
             width={viewport[0]}
             height={viewport[1]}
             style={{width: this.getThumbnailSize(1)[0], height: this.getThumbnailSize(1)[1]}}
