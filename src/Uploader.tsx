@@ -18,7 +18,7 @@ export default class Uploader extends React.Component<IUploaderProps, any> {
     file: HTMLInputElement;
   };
 
-  onClick = (ev) => {
+  onClick = () => {
     const el = this.refs.file;
     if (!el) {
       return;
@@ -26,8 +26,12 @@ export default class Uploader extends React.Component<IUploaderProps, any> {
     el.click();
   }
 
-  selectFile = (ev) => {
+  selectFile = () => {
+    if (!this.refs.file || !this.refs.file.files) {
+      return;
+    }
     const file = this.refs.file.files[0];
+
     if (/image\/*/g.test(file.type)) {
       this.props.onSelectImage(file);
     }

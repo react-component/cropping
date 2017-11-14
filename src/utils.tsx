@@ -1,7 +1,7 @@
 import zhCN from './locale/zh_CN';
 import enUS from './locale/en_US';
 
-export type Scaler = (from: HTMLCanvasElement, to: HTMLCanvasElement) => Promise<HTMLCanvasElement>;
+export type Scaler = (from: HTMLCanvasElement, to: HTMLCanvasElement) => Promise<any>;
 export function debounce(func, wait, immediate: boolean = false) {
   let timeout;
   return function debounceFunc() {
@@ -52,11 +52,14 @@ export function applyTransform(element, transformString: string) {
 }
 
 // pixel-perfect downsampling
-export function downScaleImage(img, scale, scaler: Scaler = defaultDownScaler): Promise<HTMLCanvasElement> {
+export function downScaleImage(img, scale, scaler: Scaler = defaultDownScaler): Promise<any> {
     const sourceCanvas = document.createElement('canvas');
     sourceCanvas.width = img.width;
     sourceCanvas.height = img.height;
     const imgCtx = sourceCanvas.getContext('2d');
+    if (!imgCtx) {
+        return Promise.reject('canvas error');
+    }
     imgCtx.drawImage(img, 0, 0);
     if (scale >= 1) {
       return Promise.resolve(sourceCanvas);
@@ -79,7 +82,7 @@ function defaultDownScaler(from, to) {
 
 /* tslint:disable */
 
-function downScaleCanvas(cv, resCV) {
+function downScaleCanvas(cv, resCV):HTMLCanvasElement {
     const scale = resCV.width / cv.width;
     if (!(scale < 1) || !(scale > 0)) throw ('scale must be a positive number <1 ');
     var sqScale = scale * scale; // square scale = area of source pixel within target

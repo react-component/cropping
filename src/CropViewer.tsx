@@ -4,15 +4,15 @@ import Uploader from './Uploader';
 import Cropper from './Cropper';
 
 export interface ICropViewerState {
-  previewImage?: File;
-  selectedImage?: string;
+  previewImage?: File | null;
+  selectedImage?: string | null;
 }
 
 export interface ICropProps {
   prefixCls: string;
   value: Blob;
-  onChange: (blob: Blob) => void;
-  size?: number[];
+  onChange: (blob: Blob | null) => void;
+  size: number[];
   circle?: boolean;
   renderModal: (args?: any) => React.ComponentElement<any, any>;
   getSpinContent: () => React.ComponentElement<any, any>;
@@ -35,8 +35,8 @@ export default class CropViewer extends React.Component<ICropProps, ICropViewerS
     showSelected: true,
     resetPreviewAfterSelectImage: false,
   };
-  private selectImageCallback: Function;
-  private cancelSelectImageCallback: Function;
+  private selectImageCallback: Function | null;
+  private cancelSelectImageCallback: Function | null;
   constructor(props) {
     super(props);
     this.state = {
@@ -106,7 +106,10 @@ export default class CropViewer extends React.Component<ICropProps, ICropViewerS
       };
     });
   }
-  onChange = (fileblob: Blob) => {
+  onChange = (fileblob: Blob | null) => {
+    if (!this.state.previewImage) {
+      return;
+    }
     const file = fileblob ?
       new File(
         [fileblob],
@@ -121,7 +124,7 @@ export default class CropViewer extends React.Component<ICropProps, ICropViewerS
     if (file && this.selectImageCallback) {
       this.selectImageCallback(file);
     }
-    if (!fileblob) {
+    if (!fileblob && this.cancelSelectImageCallback) {
       this.cancelSelectImageCallback();
     }
     if (!this.props.value) {

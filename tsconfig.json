@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
     "target": "ES6",
     "experimentalDecorators": true,
     "sourceMap": true,

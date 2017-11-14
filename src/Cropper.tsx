@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Scaler from './Scaler';
 export type imageAttr = 'width' | 'height';
-import dataURLtoBlob from './canvasToBlob';
+import dataURLtoBlob from './canvasToBlob.polyfills';
 import { debounce, downScaleImage, applyTransform, getLocale } from './utils';
 
 function isImage(file: File) {
@@ -55,7 +55,7 @@ export interface ICropperProps {
   spin?: React.ComponentElement<any, any>;
   renderModal?: (args?: any) => React.ComponentElement<IDialogProps, any>;
   locale?: String;
-  thumbnailSizes: number[][];
+  thumbnailSizes?: number[][];
   resizer?: (from: HTMLCanvasElement, to: HTMLCanvasElement) => Promise<HTMLCanvasElement>;
 }
 
@@ -78,9 +78,13 @@ export default class Cropper extends React.Component<ICropperProps, any> {
 
   updateThumbnail = debounce(() => {
     const { image, width, height } = this.state;
-    // const scaledImage = downScaleImage(image, 0.2);
-    this.refNodes.Canvas2x.getContext('2d').drawImage(image, left, top, width, height);
-    this.refNodes.Canvas1x.getContext('2d').drawImage(image, left, top, width, height);
+    if (this.refNodes) {
+      for (const item of [ 'Canvas2x', 'Canvas1x' ]) {
+        if (this.refNodes[item]) {
+          this.refNodes[item].getContext('2d').drawImage(image, left, top, width, height);
+        }
+      }
+    }
   }, 100);
 
   constructor(props) {
@@ -275,6 +279,10 @@ export default class Cropper extends React.Component<ICropperProps, any> {
       canvas.setAttribute('height', viewport[1]);
       const context = canvas.getContext('2d');
 
+      if (!context) {
+        return;
+      }
+
       if (!/image\/png/g.test(this.props.file.type)) {
         context.fillStyle = '#fff';
         context.fillRect(0, 0, viewport[0], viewport[1]);
@@ -339,7 +347,7 @@ export default class Cropper extends React.Component<ICropperProps, any> {
   }
 
   render() {
-    const { prefixCls, size, circle, spin, renderModal, thumbnailSizes } = this.props;
+    const { prefixCls, circle, spin, renderModal } = this.props;
     const { image, width, height, scale, scaleRange, viewport } = this.state;
     const style = { left: 0, top: 0 };
     const draggerEvents = {
@@ -373,7 +381,7 @@ export default class Cropper extends React.Component<ICropperProps, any> {
       </button>,
     ];
     const viewPortStyle = { width: viewport[0], height: viewport[1] };
-    const previewClassName = circle ? 'radius' : null;
+    const previewClassName = circle ? 'radius' : '';
 
     const cropperElement = image ? (<div className={`${prefixCls}-cropper-wrapper`}>
       <div className={`${prefixCls}-cropper`}>
