@@ -35,12 +35,13 @@
     "karma": "rc-tools run karma",
     "saucelabs": "rc-tools run saucelabs",
     "test": "jest --config .jest.js",
-    "coverage": "jest --config .jest.js --coverage"
+    "coverage": "jest --config .jest.js --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "rc-slider": "^8.4.0"
   },
   "devDependencies": {
+    "coveralls": "^2.11.16",
     "babel-jest": "^19.0.0",
     "typescript": "~2.6.0",
     "typescript-babel-jest": "^1.0.2",
