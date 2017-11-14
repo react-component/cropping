@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>simple.js - example - rc-cropping@0.2.0</title>
+  <title>simple.js - example - rc-cropping@1.0.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,32 +257,32 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="common.css" /><link rel="stylesheet" href="simple.css" />
+  <link rel="stylesheet" href="../common.css" /><link rel="stylesheet" href="simple.css" />
 </head>
 
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-cropping@0.2.0</h1>
+      <h1>rc-cropping@1.0.0</h1>
 
-      <p>CropViewer ui component for react</p>
+      <p>CropViewer component for react</p>
     </div>
     <div class="example" id="__react-content"></div>
 
     <div class="highlight"><pre><code language="js"><span class="hljs-comment">// use jsx to render html, do not modify simple.html</span>
-
-<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-cropping/assets/index.css'</span>;
-<span class="hljs-keyword">import</span> CropViewer <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-cropping'</span>;
-<span class="hljs-keyword">import</span> Dialog <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-dialog'</span>;
-<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-dialog/assets/index.css'</span>;
 <span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
 <span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+<span class="hljs-keyword">import</span> CropViewer <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-cropping'</span>;
+<span class="hljs-keyword">import</span> Dialog <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-dialog'</span>;
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-cropping/assets/index.css'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-dialog/assets/index.css'</span>;
 
 ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">CropViewer</span>
   <span class="hljs-attribute">getSpinContent</span>=<span class="hljs-value">{()</span> =&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> }
   renderModal={() =&gt; <span class="hljs-tag">&lt;<span class="hljs-title">Dialog</span> /&gt;</span>}
-  circle={true}
-  locale='zh-CN'
+  locale="zh-CN"
+  circle
 /&gt;, document.getElementById('__react-content'));
 </span></code></pre></div>
   </div>
@@ -293,7 +293,7 @@ ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-t
          data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
   </a>
   <script>FastClick.attach(document.body);</script>
-  <script src="common.js?nowrap"></script>
+  <script src="../common.js?nowrap"></script>
   <script src="simple.js?nowrap"></script>
 </body>
 

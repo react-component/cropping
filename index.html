@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet"/>
-  <title>rc-cropping@0.2.0 - CropViewer ui component for react</title>
+  <title>rc-cropping@1.0.0 - CropViewer component for react</title>
   <style>
     @font-face {
       font-family: octicons-anchor;
@@ -737,7 +737,7 @@
 
 <body>
 <div class="header">
-  <h1>rc-cropping@0.2.0</h1>
+  <h1>rc-cropping@1.0.0</h1>
 </div>
 <div class="examples">
   <h3>EXAMPLES</h3>
@@ -751,6 +751,8 @@
       <li><a href="examples/raw.html">raw</a></li>
       
       <li><a href="examples/simple.html">simple</a></li>
+      
+      <li><a href="examples/usePica.html">usePica</a></li>
       
     </ul>
   </div>
@@ -824,6 +826,12 @@ ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-t
           <td>boolean</td>
           <td>false</td>
           <td> Croppe circle image or not. If true, you&#39;ll get a circle picture. Notice: transparent background <em>ONLY</em> supported in png file, croppe jpg file will get white background. </td>
+        </tr>
+        <tr>
+          <td>resizer</td>
+          <td>function</td>
+          <td>null</td>
+          <td> Cropper support custom image resize function, e.g., you can use <a href="https://github.com/nodeca/pica" title="null">pica</a> to down scale your picture more perfectly </td>
         </tr>
     </tbody>
 </table>

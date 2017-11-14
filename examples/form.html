@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>form.js - example - rc-cropping@0.2.0</title>
+  <title>form.js - example - rc-cropping@1.0.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,39 +257,41 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="common.css" /><link rel="stylesheet" href="form.css" />
+  <link rel="stylesheet" href="../common.css" /><link rel="stylesheet" href="form.css" />
 </head>
 
 <body>
   <div class="container">
     <div class="header">
-      <h1>rc-cropping@0.2.0</h1>
+      <h1>rc-cropping@1.0.0</h1>
 
-      <p>CropViewer ui component for react</p>
+      <p>CropViewer component for react</p>
     </div>
     <div class="example" id="__react-content"></div>
 
     <div class="highlight"><pre><code language="undefined">// use jsx to render html, do not modify simple.html
-import 'antd/dist/antd.less';
-import 'rc-cropping/assets/index.css';
-import CropViewer from 'rc-cropping';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import CropViewer from 'rc-cropping';
 import { Form, Button, Modal, Spin } from 'antd';
+
+import 'antd/dist/antd.less';
+import 'rc-cropping/assets/index.css';
 
 const FormItem = Form.Item;
 
-const NormalLoginForm = Form.create()(React.createClass({
-  handleSubmit(e) {
+class NormalLoginFormComp extends React.Component {
+  handleSubmit = (e) =&gt; {
     e.preventDefault();
     this.props.form.validateFields((err, values) =&gt; {
       if (!err) {
         console.log('Received values of form: ', values);
       }
     });
-  },
+  }
   render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -305,7 +307,7 @@ const NormalLoginForm = Form.create()(React.createClass({
     return (
       &lt;Form onSubmit={this.handleSubmit} className="login-form" &gt;
         &lt;FormItem label="请上传您的头像：" {...formItemLayout} &gt;
-          {getFieldDecorator('file', { initialValue: 'https://avatars2.githubusercontent.com/u/566097?v=3&amp;s=88'})(
+          {getFieldDecorator('file', { initialValue: 'https://avatars2.githubusercontent.com/u/566097?v=3&amp;s=88' })(
             &lt;CropViewer
               size={[64, 64]}
               thumbnailSizes={[[64, 64], [32, 32]]}
@@ -323,8 +325,14 @@ const NormalLoginForm = Form.create()(React.createClass({
         &lt;/FormItem&gt;
       &lt;/Form&gt;
     );
-  },
-}));
+  }
+}
+
+NormalLoginFormComp.propTypes = {
+  form: PropTypes.object,
+};
+
+const NormalLoginForm = Form.create()(NormalLoginFormComp);
 
 ReactDOM.render(&lt;NormalLoginForm /&gt;, document.getElementById('__react-content'));
 </code></pre></div>
@@ -336,7 +344,7 @@ ReactDOM.render(&lt;NormalLoginForm /&gt;, document.getElementById('__react-cont
          data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
   </a>
   <script>FastClick.attach(document.body);</script>
-  <script src="common.js?nowrap"></script>
+  <script src="../common.js?nowrap"></script>
   <script src="form.js?nowrap"></script>
 </body>
 

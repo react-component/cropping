@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>cropper.js - example - rc-cropping@1.0.0</title>
+  <title>usePica.js - example - rc-cropping@1.0.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,7 +257,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="../common.css" /><link rel="stylesheet" href="cropper.css" />
+  <link rel="stylesheet" href="../common.css" /><link rel="stylesheet" href="usePica.css" />
 </head>
 
 <body>
@@ -270,38 +270,28 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     <div class="example" id="__react-content"></div>
 
     <div class="highlight"><pre><code language="js"><span class="hljs-comment">// use jsx to render html, do not modify simple.html</span>
-<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-cropping/assets/index.css'</span>;
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
 <span class="hljs-keyword">import</span> CropViewer <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-cropping'</span>;
 <span class="hljs-keyword">import</span> Dialog <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-dialog'</span>;
-<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-dialog/assets/index.css'</span>;
-<span class="hljs-keyword">import</span> Upload <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-upload'</span>;
-<span class="hljs-keyword">import</span> React, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
-<span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
-  beforeUpload(file) {
-    <span class="hljs-keyword">const</span> cropper = <span class="hljs-keyword">this</span>.cropper;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'&gt;&gt; cropper'</span>, <span class="hljs-keyword">this</span>.cropper);
-    <span class="hljs-keyword">return</span> cropper.selectImage(file).then(image =&gt; {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'&gt;&gt; selecTImage'</span>, image);
-      <span class="hljs-keyword">return</span> image;
-    });
-  }
-  render() {
-    <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">Upload</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"drag"</span> <span class="hljs-attribute">beforeUpload</span>=<span class="hljs-value">{this.beforeUpload}</span> &gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>开始上传<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Upload</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">CropViewer</span>
-        <span class="hljs-attribute">getSpinContent</span>=<span class="hljs-value">{()</span> =&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> }
-        renderModal={() =&gt; <span class="hljs-tag">&lt;<span class="hljs-title">Dialog</span> /&gt;</span>}
-        locale="zh-CN"
-        ref={ele =&gt; this.cropper = ele}
-        circle
-      /&gt;
-    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>)</span>;
-  }
+<span class="hljs-keyword">import</span> pica <span class="hljs-keyword">from</span> <span class="hljs-string">'pica'</span>;
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-cropping/assets/index.css'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'rc-dialog/assets/index.css'</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resizer</span>(<span class="hljs-params">from, to</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'&gt;&gt; pica resizer'</span>, from, to);
+  <span class="hljs-keyword">return</span> pica().resize(from, to);
 }
 
-ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">App</span> /&gt;</span>, document.getElementById('__react-content'));
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">CropViewer</span>
+  <span class="hljs-attribute">getSpinContent</span>=<span class="hljs-value">{()</span> =&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> }
+  renderModal={() =&gt; <span class="hljs-tag">&lt;<span class="hljs-title">Dialog</span> /&gt;</span>}
+  locale="zh-CN"
+  resizer={resizer}
+  circle
+/&gt;, document.getElementById('__react-content'));
 </span></code></pre></div>
   </div>
   <a href="https://github.com/react-component/cropping">
@@ -312,7 +302,7 @@ ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-t
   </a>
   <script>FastClick.attach(document.body);</script>
   <script src="../common.js?nowrap"></script>
-  <script src="cropper.js?nowrap"></script>
+  <script src="usePica.js?nowrap"></script>
 </body>
 
 </html>
