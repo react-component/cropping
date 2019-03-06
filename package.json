@@ -60,7 +60,7 @@
     "rc-form": "^1.0.1",
     "rc-tools": "6.2.2",
     "rc-upload": "^2.3.7",
-    "react": "16.0.0",
+    "react": "16.8.4",
     "react-dom": "16.0.0"
   },
   "pre-commit": [
