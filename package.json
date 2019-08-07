@@ -41,7 +41,7 @@
     "rc-slider": "^8.4.0"
   },
   "devDependencies": {
-    "coveralls": "^2.11.16",
+    "coveralls": "^3.0.6",
     "babel-jest": "^19.0.0",
     "typescript": "~2.6.0",
     "typescript-babel-jest": "^1.0.2",
