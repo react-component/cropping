@@ -56,7 +56,7 @@
     "pica": "^4.0.1",
     "pre-commit": "1.x",
     "prop-types": "^15.6.0",
-    "rc-dialog": "^6.5.0",
+    "rc-dialog": "^7.5.10",
     "rc-form": "^1.0.1",
     "rc-tools": "6.2.2",
     "rc-upload": "^2.3.7",
