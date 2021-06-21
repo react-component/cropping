@@ -53,7 +53,7 @@
     "enzyme-to-json": "^3.1.4",
     "expect.js": "0.3.x",
     "jest": "^21.2.1",
-    "pica": "^4.0.1",
+    "pica": "^7.1.0",
     "pre-commit": "1.x",
     "prop-types": "^15.6.0",
     "rc-dialog": "^6.5.0",
